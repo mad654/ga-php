@@ -1,0 +1,20 @@
+# .env config file
+# find details for usage on https://github.com/vlucas/phpdotenv
+
+# App common stuff
+APP_NAME="boilerplate php command line"
+
+## Logging
+APP_VAR_DIR="./var/"
+APP_CACHE_DIR="${APP_VAR_DIR}/cache"
+APP_LOG_DIR="${APP_VAR_DIR}/log"
+
+### Command line log level for finger crossed handler
+### which means: Nothing is logged until a error occured,
+### if so all log messages for APP_LOG_LEVEL and above
+### is dump to STDOUT
+APP_LOG_LEVEL="DEBUG"
+
+# Add your application stuff here
+## !!! HAVE SOME REQUIRED ONE, OR WANT TO FILTER VALUES? !!!
+## !!! Take a look at `etc/config_requirements.inc.php`  !!!
