@@ -3,7 +3,7 @@ Genetic algorithm implemented based on this tutorial: http://www.ai-junkie.com/g
 
 ## How to run
 ```
-git clone git@github.com:mad654/ga-php.git
+git clone https://github.com/mad654/ga-php.git
 cd src
 php SimpleDemo.php
 ```
