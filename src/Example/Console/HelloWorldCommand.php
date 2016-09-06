@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Example\Console;
+namespace GenAlgo\Console;
 
 
 use Psr\Log\LoggerInterface;
