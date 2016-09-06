@@ -13,7 +13,7 @@ require_once (__DIR__ . '/SimpleCode.php');
 require_once (__DIR__ . '/SolutionException.php');
 require_once (__DIR__ . '/SelectionException.php');
 // todo:mann test 24k with 0.09609375 AND 0.09375 each in one process
-const TEST_COUNT=48000;
+const TEST_COUNT=2000;
 
 const MAX_SELECTION_ATTEMPS = 10000;
 const MAX_POPULATIONS   = 5000;
@@ -327,7 +327,9 @@ for ($i = 1; $i <= TEST_COUNT; $i++) {
   $result = main();
   $stop = microtime( true );
   $diff = $stop - $start;
-  echo implode(' ', $result) . ' ';
+
+  echo array_shift($result) . ' ';
+  echo implode(';', $result) . ' ';
 
   echo date(DATE_ATOM) . ' ';
   echo "$start $stop $diff";
