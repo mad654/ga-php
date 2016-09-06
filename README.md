@@ -9,3 +9,9 @@ php SimpleDemo.php
 ```
 
 See [src/SimpleDemo.php](src/SimpleDemo.php) for details.
+
+## ROADMAP
+- integrate as command
+- add configuration object
+- emmit events [start, ok, error]
+- log events as json together with configuration (Monolog json logger ???)
