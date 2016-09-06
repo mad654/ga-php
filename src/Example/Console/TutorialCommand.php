@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class HelloWorldCommand extends Command
+class TutorialCommand extends Command
 {
     /**
      * @var LoggerInterface
@@ -18,7 +18,7 @@ class HelloWorldCommand extends Command
     private $logger;
 
     /**
-     * HelloWorldCommand constructor.
+     * TutorialCommand constructor.
      */
     public function __construct(LoggerInterface $logger)
     {
@@ -30,8 +30,8 @@ class HelloWorldCommand extends Command
     {
         parent::configure();
 
-        $this->setName('example:hello-world');
-        $this->setDescription('Guess what it is! Additionally it logs an error - sometimes');
+        $this->setName('gen-algo:tutorial');
+        $this->setDescription('Find simple function based on given number');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
