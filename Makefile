@@ -1,6 +1,9 @@
 
 test: build
 
+run: test
+	@bin/app gen-algo:tutorial
+	
 build: vendor etc/config
 
 	vendor/bin/phpunit -c test/phpunit.xml

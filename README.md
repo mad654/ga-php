@@ -14,6 +14,10 @@ make
 ### How to run
 
 ```
+make run
+
+# or
+
 bin/app gen-algo:tutorial
 ```
 
