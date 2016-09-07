@@ -42,6 +42,10 @@ const CHROMOSOME_LENGTH = 9;
 #const MUTATION_RATE     = 0.09375;
 #const MUTATION_RATE     = 0.09609375;
 
+/**
+ * @param ConfigurationValues $c
+ * @return array
+ */
 function simpleDemo(ConfigurationValues $c) {
   // todo: mann: store intial population of long running
   // todo: mann: test optimal parameters
@@ -80,6 +84,12 @@ function simpleDemo(ConfigurationValues $c) {
   }
 }
 
+/**
+ * @param SimpleCode $code
+ * @param $size
+ * @param $length
+ * @return array
+ */
 function initPopulation(SimpleCode $code, $size, $length) {
   $population = [];
 
@@ -90,6 +100,11 @@ function initPopulation(SimpleCode $code, $size, $length) {
   return $population;
 }
 
+/**
+ * @param SimpleCode $code
+ * @param $length
+ * @return string
+ */
 function generateNewSpez(SimpleCode $code, $length) {
   $newSpez = '';
 
@@ -100,6 +115,12 @@ function generateNewSpez(SimpleCode $code, $length) {
   return $newSpez;
 }
 
+/**
+ * @param array $population
+ * @param SimpleCode $code
+ * @param ConfigurationValues $c
+ * @return array
+ */
 function generateNewPopulation(array $population, SimpleCode $code, ConfigurationValues $c) {
   $newPopulation = [];
   $fitness = testPoputlation($population, $code);
@@ -127,6 +148,11 @@ function generateNewPopulation(array $population, SimpleCode $code, Configuratio
   return $newPopulation;
 }
 
+/**
+ * @param array $population
+ * @param SimpleCode $code
+ * @return array
+ */
 function testPoputlation(array $population, SimpleCode $code) {
   $fitnessAbsolute = [];
 
@@ -158,6 +184,11 @@ function testPoputlation(array $population, SimpleCode $code) {
   return $fitnessRelative;
 }
 
+/**
+ * @param $decoded
+ * @return float
+ * @throws SolutionException
+ */
 function calculateFittness($decoded) {
   $valid = cleanUp($decoded);
   # echo "$valid ";
@@ -173,6 +204,10 @@ function calculateFittness($decoded) {
   return 1/($difference);
 }
 
+/**
+ * @param $code
+ * @return mixed|string
+ */
 function cleanUp($code) {
   $numbers = ['0','1','2','3','4','5','6','7','8','9'];
   $signs = ['+', '-', '*', '/'];
@@ -208,6 +243,10 @@ function cleanUp($code) {
   return $returnValue;
 }
 
+/**
+ * @param array $population
+ * @return array
+ */
 function calcRelativeFitness(array $population) {
   $returnValue = [];
   $sum = calcFitnessSum($population);
@@ -223,6 +262,10 @@ function calcRelativeFitness(array $population) {
   return $returnValue;
 }
 
+/**
+ * @param array $population
+ * @return int
+ */
 function calcFitnessSum(array $population) {
   $sum = 0;
   foreach($population as $values) {
@@ -231,6 +274,12 @@ function calcFitnessSum(array $population) {
   return $sum;
 }
 
+/**
+ * @param $population
+ * @param ConfigurationValues $c
+ * @return array
+ * @throws SelectionException
+ */
 function selectPair($population, ConfigurationValues $c) {
   $spez1 = ['chromosome' => null];
   $spez2 = ['chromosome' => null];
@@ -270,6 +319,12 @@ function selectSpez($population) {
   return $population[count($population) - 1];
 }
 
+/**
+ * @param $spez1
+ * @param $spez2
+ * @param ConfigurationValues $c
+ * @return array
+ */
 function sex($spez1, $spez2, ConfigurationValues $c) {
   // todo: mann: verify performance if only one child is returned
   // todo: mann: verify performance if only sometimes multiple childs are returned
@@ -295,6 +350,11 @@ function sex($spez1, $spez2, ConfigurationValues $c) {
   return [$child1, $child2];
 }
 
+/**
+ * @param $chromosome
+ * @param $mutationRate
+ * @return string
+ */
 function mutate($chromosome, $mutationRate) {
   $bits = str_split($chromosome);
 
@@ -311,6 +371,7 @@ function mutate($chromosome, $mutationRate) {
 
 /**
  * Run simple demo for TEST_COUNT times
+ * @param ConfigurationValues $c
  */
 function runSimpleDemo(ConfigurationValues $c)
 {
