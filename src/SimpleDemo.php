@@ -13,7 +13,7 @@ require_once (__DIR__ . '/SimpleCode.php');
 require_once (__DIR__ . '/SolutionException.php');
 require_once (__DIR__ . '/SelectionException.php');
 // todo:mann test 24k with 0.09609375 AND 0.09375 each in one process
-const TEST_COUNT=2000;
+const TEST_COUNT=10;
 
 const MAX_SELECTION_ATTEMPS = 10000;
 const MAX_POPULATIONS   = 5000;
@@ -41,7 +41,7 @@ const CODE = [
     '1101' => '/',
 ];
 
-function main() {
+function simpleDemo() {
   // todo: mann: store intial population of long running
   // todo: mann: test optimal parameters
   // todo: mann: are optimal parameters generic or problem related?
@@ -308,30 +308,36 @@ function mutate($chromosome, $mutationRate) {
   return implode('', $bits);
 }
 
-ini_set('memory_limit','512M');
-exec('git rev-list HEAD -n1', $output);
-$commitId = $output[0];
+/**
+ * Run simple demo for TEST_COUNT times
+ */
+function runSimpleDemo()
+{
+    ini_set('memory_limit', '512M');
+    exec('git rev-list HEAD -n1', $output);
+    $commitId = $output[0];
 
-for ($i = 1; $i <= TEST_COUNT; $i++) {
-  $start = microtime( true );
+    for ($i = 1; $i <= TEST_COUNT; $i++) {
+        $start = microtime(true);
 
-  echo "$commitId ";
-  echo POPULATION_SIZE . ' ';
-  echo COMBINATION_RATE . ' ';
-  echo MUTATION_RATE . ' ';
-  echo CHROMOSOME_LENGTH . ' ';
-  echo SEARCHED . ' ';
-  echo MAX_SELECTION_ATTEMPS . ' ';
-  echo date(DATE_ATOM) . ' ';
-  echo "$i/" . TEST_COUNT . " ";
-  $result = main();
-  $stop = microtime( true );
-  $diff = $stop - $start;
+        echo "$commitId ";
+        echo POPULATION_SIZE . ' ';
+        echo COMBINATION_RATE . ' ';
+        echo MUTATION_RATE . ' ';
+        echo CHROMOSOME_LENGTH . ' ';
+        echo SEARCHED . ' ';
+        echo MAX_SELECTION_ATTEMPS . ' ';
+        echo date(DATE_ATOM) . ' ';
+        echo "$i/" . TEST_COUNT . " ";
+        $result = simpleDemo();
+        $stop = microtime(true);
+        $diff = $stop - $start;
 
-  echo array_shift($result) . ' ';
-  echo implode(';', $result) . ' ';
+        echo array_shift($result) . ' ';
+        echo implode(';', $result) . ' ';
 
-  echo date(DATE_ATOM) . ' ';
-  echo "$start $stop $diff";
-  echo PHP_EOL;
+        echo date(DATE_ATOM) . ' ';
+        echo "$start $stop $diff";
+        echo PHP_EOL;
+    }
 }

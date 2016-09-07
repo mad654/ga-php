@@ -4,6 +4,7 @@
 namespace GenAlgo\Console;
 
 
+use GenAlgo\Environment;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -37,14 +38,8 @@ class TutorialCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $style = new SymfonyStyle($input, $output);
-        $style->writeln("Hello world!");
-        $name = $style->ask("Whats your name?", 'Hugu');
-        $this->logger->info("User gave his name: {n}", [ 'n' => $name ]);
-        $style->success("Hello $name!");
-
-        $shouldLogError = rand(0,1);
-        if ($shouldLogError > 0) {
-            $this->logger->error("A DEMO ERROR");
-        }
+        $sourceRootPath = Environment::getSourceRootPath();
+        require_once "$sourceRootPath/SimpleDemo.php";
+        runSimpleDemo();
     }
 }

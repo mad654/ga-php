@@ -3,6 +3,7 @@
 
 # App common stuff
 APP_NAME="GenAlgo"
+APP_SRC_DIR="./src"
 
 ## Logging
 APP_VAR_DIR="./var/"
