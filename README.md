@@ -73,6 +73,6 @@ bin/app gen-algo:tutorial
 ## ROADMAP
 - [DONE] integrate as command
 - [DONE] add configuration object feature/mad654/configuration
-- make file fetches own local composer to bin/composer
+- [DONE] make file fetches own local composer to bin/composer
 - emmit events [start, ok, error]
 - log events as json together with configuration (Monolog json logger ???)

@@ -1,5 +1,6 @@
 # Changes for *ga-php*
 
+- install composer localy during `make`
 - Make algo parameters configure able via
   - configuration file in `etc/config`
   - system envirnment variables
