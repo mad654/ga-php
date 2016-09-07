@@ -43,7 +43,7 @@ class TutorialCommand extends Command
         require_once "$sourceRootPath/SimpleDemo.php";
         runSimpleDemo(42, 10, ConfigurationValues::fromArray([]));
 
-        // @todo: mad654: fetch all defaults from .env
-        // @todo: mad654: overwrite all config by command line
+        // @todo: mad654: fetch all from from .env (require searched and testcount)
+        // @todo: mad654: document configuration options in readme
     }
 }
