@@ -7,7 +7,7 @@ Genetic algorithm implemented based on this
 
 ```
 git clone https://github.com/mad654/ga-php.git
-cd src
+cd ga-php
 make
 ```
 
