@@ -19,3 +19,9 @@ APP_LOG_LEVEL="DEBUG"
 # Add your application stuff here
 ## !!! HAVE SOME REQUIRED ONE, OR WANT TO FILTER VALUES? !!!
 ## !!! Take a look at `etc/config_requirements.inc.php`  !!!
+
+# MAX_POPULATIONS=100
+# POPULATION_SIZE=100
+# CROSSOVER_RATE=0.7
+# MUTATION_RATE=0.001
+# MAX_SELECTION_ATTEMPTS=10000
