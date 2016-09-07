@@ -1,7 +1,8 @@
 
+test: build
+
 build: vendor etc/config
 
-test: build
 	vendor/bin/phpunit -c test/phpunit.xml
 
 vendor: composer.lock
