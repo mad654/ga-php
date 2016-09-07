@@ -24,5 +24,6 @@ See [src/SimpleDemo.php](src/SimpleDemo.php) for details.
 ## ROADMAP
 - [DONE] integrate as command
 - [PROGRESS] add configuration object feature/mad654/configuration
+- make file fetches own local composer to bin/composer
 - emmit events [start, ok, error]
 - log events as json together with configuration (Monolog json logger ???)
