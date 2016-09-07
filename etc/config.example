@@ -20,6 +20,9 @@ APP_LOG_LEVEL="DEBUG"
 ## !!! HAVE SOME REQUIRED ONE, OR WANT TO FILTER VALUES? !!!
 ## !!! Take a look at `etc/config_requirements.inc.php`  !!!
 
+TARGET_NUMBER = 42
+TEST_COUNT = 10
+
 # MAX_POPULATIONS=100
 # POPULATION_SIZE=100
 # CROSSOVER_RATE=0.7

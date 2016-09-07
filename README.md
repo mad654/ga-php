@@ -22,7 +22,26 @@ bin/app gen-algo:tutorial
 Implements this [tutorial](http://www.ai-junkie.com/ga/intro/gat1.html)
 See [src/SimpleDemo.php](src/SimpleDemo.php) for details.
 
-### Play with parameters
+### Required parameters
+
+They are defined with the following defaults:
+
+```
+TARGET_NUMBER = 42
+TEST_COUNT = 10
+```
+
+Which means on call of this command would try to find `10` solutions
+for number `42`.
+
+If you want to change the test count or the target number you can change
+`etc/config` or use system environment variables:
+
+```
+TARGET_NUMBER=99 TEST_COUNT=100 bin/app gen-algo:tutorial
+```
+
+### Play with evolution parameters
 
 You want to evaluate how which parameter influences the performance of
 the algorithm?

@@ -51,4 +51,14 @@ class Environment
 
         return ConfigurationValues::fromArray($result);
     }
+
+    public static function getTargetNumber()
+    {
+        return self::get('TARGET_NUMBER');
+    }
+
+    public static function getTestCount()
+    {
+        return self::get('TEST_COUNT');
+    }
 }
