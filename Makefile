@@ -1,8 +1,12 @@
 
+test: build
+
+run: test
+	@bin/app gen-algo:tutorial
+	
 build: vendor etc/config
 
-test: build
-	bin/app gen-algo:tutorial
+	vendor/bin/phpunit -c test/phpunit.xml
 
 vendor: composer.lock
 
