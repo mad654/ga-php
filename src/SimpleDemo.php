@@ -16,10 +16,6 @@ require_once (__DIR__ . '/SolutionException.php');
 require_once (__DIR__ . '/SelectionException.php');
 // todo:mann test 24k with 0.09609375 AND 0.09375 each in one process
 
-const TEST_COUNT=10;
-const SEARCHED          = 42;
-
-
 const CODE = [
     '0000' => '0',
     '0001' => '1',
@@ -43,10 +39,11 @@ const CHROMOSOME_LENGTH = 9;
 #const MUTATION_RATE     = 0.09609375;
 
 /**
+ * @param $searchedValue
  * @param ConfigurationValues $c
  * @return array
  */
-function simpleDemo(ConfigurationValues $c) {
+function simpleDemo($searchedValue, ConfigurationValues $c) {
   // todo: mann: store intial population of long running
   // todo: mann: test optimal parameters
   // todo: mann: are optimal parameters generic or problem related?
@@ -57,7 +54,7 @@ function simpleDemo(ConfigurationValues $c) {
 
   while (true) {
     try {
-      $new = generateNewPopulation($population, $code, $c);
+      $new = generateNewPopulation($population, $code, $c, $searchedValue);
     } catch(\SolutionException $e) {
       return [$counter, $e->getMessage()];
     } catch(\SelectionException $e) {
@@ -119,11 +116,12 @@ function generateNewSpez(SimpleCode $code, $length) {
  * @param array $population
  * @param SimpleCode $code
  * @param ConfigurationValues $c
+ * @param $searched
  * @return array
  */
-function generateNewPopulation(array $population, SimpleCode $code, ConfigurationValues $c) {
+function generateNewPopulation(array $population, SimpleCode $code, ConfigurationValues $c, $searched) {
   $newPopulation = [];
-  $fitness = testPoputlation($population, $code);
+  $fitness = testPoputlation($population, $code, $searched);
   $populationFitness = calcFitnessSum($fitness) / count($population);
   # echo "avg population fitness: $populationFitness" . PHP_EOL;
 
@@ -151,9 +149,10 @@ function generateNewPopulation(array $population, SimpleCode $code, Configuratio
 /**
  * @param array $population
  * @param SimpleCode $code
+ * @param $searched
  * @return array
  */
-function testPoputlation(array $population, SimpleCode $code) {
+function testPoputlation(array $population, SimpleCode $code, $searched) {
   $fitnessAbsolute = [];
 
   foreach ($population as $spez) {
@@ -161,7 +160,7 @@ function testPoputlation(array $population, SimpleCode $code) {
     $decoded = $code->decode($spez);
     # echo "$decoded >> ";
 
-    $fitness = calculateFittness($decoded);
+    $fitness = calculateFittness($searched, $decoded);
     # echo "Fittness: $fitness ";
     # echo "... done" . PHP_EOL;
 
@@ -185,18 +184,19 @@ function testPoputlation(array $population, SimpleCode $code) {
 }
 
 /**
+ * @param $searched
  * @param $decoded
  * @return float
  * @throws SolutionException
  */
-function calculateFittness($decoded) {
+function calculateFittness($searched, $decoded) {
   $valid = cleanUp($decoded);
   # echo "$valid ";
 
   $result = eval("return $valid;");
   # echo "= $result >> ";
 
-  $difference = SEARCHED-$result;
+  $difference = $searched-$result;
   if ($difference == 0) {
     throw new \SolutionException($valid);
   }
@@ -371,15 +371,17 @@ function mutate($chromosome, $mutationRate) {
 
 /**
  * Run simple demo for TEST_COUNT times
+ * @param $searchedValue
+ * @param $testCount
  * @param ConfigurationValues $c
  */
-function runSimpleDemo(ConfigurationValues $c)
+function runSimpleDemo($searchedValue, $testCount, ConfigurationValues $c)
 {
     ini_set('memory_limit', '512M');
     exec('git rev-list HEAD -n1', $output);
     $commitId = $output[0];
 
-    for ($i = 1; $i <= TEST_COUNT; $i++) {
+    for ($i = 1; $i <= $testCount; $i++) {
         $start = microtime(true);
 
         echo "$commitId ";
@@ -387,11 +389,11 @@ function runSimpleDemo(ConfigurationValues $c)
         echo $c->CrossoverRate() . ' ';
         echo $c->MutationRate() . ' ';
         echo CHROMOSOME_LENGTH . ' ';
-        echo SEARCHED . ' ';
+        echo $searchedValue . ' ';
         echo $c->MaxSelectionAttempts() . ' ';
         echo date(DATE_ATOM) . ' ';
-        echo "$i/" . TEST_COUNT . " ";
-        $result = simpleDemo($c);
+        echo "$i/" . $testCount . " ";
+        $result = simpleDemo($searchedValue, $c);
         $stop = microtime(true);
         $diff = $stop - $start;
 

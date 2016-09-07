@@ -41,6 +41,9 @@ class TutorialCommand extends Command
         $style = new SymfonyStyle($input, $output);
         $sourceRootPath = Environment::getSourceRootPath();
         require_once "$sourceRootPath/SimpleDemo.php";
-        runSimpleDemo(ConfigurationValues::fromArray([]));
+        runSimpleDemo(42, 10, ConfigurationValues::fromArray([]));
+
+        // @todo: mad654: fetch all defaults from .env
+        // @todo: mad654: overwrite all config by command line
     }
 }
