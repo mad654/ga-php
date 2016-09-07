@@ -53,7 +53,7 @@ class ConfigurationValues
     /**
      * @return int
      */
-    public function getMaxPopulations()
+    public function MaxPopulations()
     {
         return $this->maxPopulations;
     }
@@ -61,7 +61,7 @@ class ConfigurationValues
     /**
      * @return int
      */
-    public function getPopulationSize()
+    public function PopulationSize()
     {
         return $this->populationSize;
     }
@@ -69,7 +69,7 @@ class ConfigurationValues
     /**
      * @return float
      */
-    public function getCrossoverRate()
+    public function CrossoverRate()
     {
         return $this->crossoverRate;
     }
@@ -77,7 +77,7 @@ class ConfigurationValues
     /**
      * @return float
      */
-    public function getMutationRate()
+    public function MutationRate()
     {
         return $this->mutationRate;
     }
@@ -85,7 +85,7 @@ class ConfigurationValues
     /**
      * @return int
      */
-    public function getMaxSelectionAttempts()
+    public function MaxSelectionAttempts()
     {
         return $this->maxSelectionAttempts;
     }

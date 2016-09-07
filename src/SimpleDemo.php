@@ -9,21 +9,17 @@ FIN: 1,11,10,00,11,00,11,10,11,11,10,00,1,10,1,1,00,1,01,1,1,1,1,10,01,11,10,1,1
 2016-08-30T10:42:27+02:00 1472538236.3416 1472546547.3498 8311.0082371235
 */
 
+use GenAlgo\ConfigurationValues;
+
 require_once (__DIR__ . '/SimpleCode.php');
 require_once (__DIR__ . '/SolutionException.php');
 require_once (__DIR__ . '/SelectionException.php');
 // todo:mann test 24k with 0.09609375 AND 0.09375 each in one process
-const TEST_COUNT=10;
 
-const MAX_SELECTION_ATTEMPS = 10000;
-const MAX_POPULATIONS   = 5000;
+const TEST_COUNT=10;
 const SEARCHED          = 42;
 
-const POPULATION_SIZE   = 100;
-const COMBINATION_RATE  = 0.7;
-#const MUTATION_RATE     = 0.09375;
-const MUTATION_RATE     = 0.09609375;
-const CHROMOSOME_LENGTH = 9;
+
 const CODE = [
     '0000' => '0',
     '0001' => '1',
@@ -40,19 +36,24 @@ const CODE = [
     '1100' => '*',
     '1101' => '/',
 ];
+const CHROMOSOME_LENGTH = 9;
 
-function simpleDemo() {
+# interesting MUTATION_RATES
+#const MUTATION_RATE     = 0.09375;
+#const MUTATION_RATE     = 0.09609375;
+
+function simpleDemo(ConfigurationValues $c) {
   // todo: mann: store intial population of long running
   // todo: mann: test optimal parameters
   // todo: mann: are optimal parameters generic or problem related?
   $code = new SimpleCode(CODE);
-  $population = initPopulation($code, POPULATION_SIZE, CHROMOSOME_LENGTH);
+  $population = initPopulation($code, $c->PopulationSize(), CHROMOSOME_LENGTH);
   $intialPopulation = $population;
   $counter = 1;
 
   while (true) {
     try {
-      $new = generateNewPopulation($population, $code);
+      $new = generateNewPopulation($population, $code, $c);
     } catch(\SolutionException $e) {
       return [$counter, $e->getMessage()];
     } catch(\SelectionException $e) {
@@ -68,7 +69,7 @@ function simpleDemo() {
     # echo "New population found: $counter" . PHP_EOL;
     $population = $new;
 
-    if ($counter >= MAX_POPULATIONS) {
+    if ($counter >= $c->MaxPopulations()) {
       return [
         $counter,
         'TIMEOUT',
@@ -99,19 +100,19 @@ function generateNewSpez(SimpleCode $code, $length) {
   return $newSpez;
 }
 
-function generateNewPopulation(array $population, SimpleCode $code) {
+function generateNewPopulation(array $population, SimpleCode $code, ConfigurationValues $c) {
   $newPopulation = [];
   $fitness = testPoputlation($population, $code);
   $populationFitness = calcFitnessSum($fitness) / count($population);
   # echo "avg population fitness: $populationFitness" . PHP_EOL;
 
   while(count($population) > count($newPopulation)) {
-    list($spez1, $spez2) = selectPair($fitness);
+    list($spez1, $spez2) = selectPair($fitness, $c);
     # echo "Selected >> ";
     # echo implode(' ', $spez1) . " - ";
     # echo implode(' ', $spez2) . PHP_EOL;
 
-    list($newSpez1,$newSpez2) = sex($spez1['chromosome'], $spez2['chromosome'], COMBINATION_RATE, MUTATION_RATE);
+    list($newSpez1,$newSpez2) = sex($spez1['chromosome'], $spez2['chromosome'], $c);
     # echo "Children >> $newSpez1 - $newSpez2" . PHP_EOL;
 
     if (!empty($newSpez1)) {
@@ -230,7 +231,7 @@ function calcFitnessSum(array $population) {
   return $sum;
 }
 
-function selectPair($population) {
+function selectPair($population, ConfigurationValues $c) {
   $spez1 = ['chromosome' => null];
   $spez2 = ['chromosome' => null];
   $counter = 1;
@@ -239,8 +240,8 @@ function selectPair($population) {
     $spez1 = selectSpez($population);
     $spez2 = selectSpez($population);
 
-    if ($counter >= MAX_SELECTION_ATTEMPS) {
-      throw new SelectionException(MAX_SELECTION_ATTEMPS, $population);
+    if ($counter >= $c->MaxSelectionAttempts()) {
+      throw new SelectionException($c->MaxSelectionAttempts(), $population);
     }
     $counter++;
   }
@@ -269,7 +270,7 @@ function selectSpez($population) {
   return $population[count($population) - 1];
 }
 
-function sex($spez1, $spez2, $combinationRate, $mutationRate) {
+function sex($spez1, $spez2, ConfigurationValues $c) {
   // todo: mann: verify performance if only one child is returned
   // todo: mann: verify performance if only sometimes multiple childs are returned
 
@@ -279,7 +280,7 @@ function sex($spez1, $spez2, $combinationRate, $mutationRate) {
   $child2 = '';
 
   // recombination
-  if ($random <= $combinationRate) {
+  if ($random <= $c->CrossoverRate()) {
     // @todo mann: verify performance if recombinationPoint got new random number
     $length = array_sum(count_chars($spez1));
     $recombinationPoint = intval($length * $random);
@@ -288,8 +289,8 @@ function sex($spez1, $spez2, $combinationRate, $mutationRate) {
   }
 
   // mutation: without we find the result in the first generation or nevert (local maximum???)
-  $child1 = mutate($child1, $mutationRate);
-  $child2 = mutate($child2, $mutationRate);
+  $child1 = mutate($child1, $c->MutationRate());
+  $child2 = mutate($child2, $c->MutationRate());
 
   return [$child1, $child2];
 }
@@ -311,7 +312,7 @@ function mutate($chromosome, $mutationRate) {
 /**
  * Run simple demo for TEST_COUNT times
  */
-function runSimpleDemo()
+function runSimpleDemo(ConfigurationValues $c)
 {
     ini_set('memory_limit', '512M');
     exec('git rev-list HEAD -n1', $output);
@@ -321,15 +322,15 @@ function runSimpleDemo()
         $start = microtime(true);
 
         echo "$commitId ";
-        echo POPULATION_SIZE . ' ';
-        echo COMBINATION_RATE . ' ';
-        echo MUTATION_RATE . ' ';
+        echo $c->PopulationSize() . ' ';
+        echo $c->CrossoverRate() . ' ';
+        echo $c->MutationRate() . ' ';
         echo CHROMOSOME_LENGTH . ' ';
         echo SEARCHED . ' ';
-        echo MAX_SELECTION_ATTEMPS . ' ';
+        echo $c->MaxSelectionAttempts() . ' ';
         echo date(DATE_ATOM) . ' ';
         echo "$i/" . TEST_COUNT . " ";
-        $result = simpleDemo();
+        $result = simpleDemo($c);
         $stop = microtime(true);
         $diff = $stop - $start;
 

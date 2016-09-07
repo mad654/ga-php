@@ -4,6 +4,7 @@
 namespace GenAlgo\Console;
 
 
+use GenAlgo\ConfigurationValues;
 use GenAlgo\Environment;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -40,6 +41,6 @@ class TutorialCommand extends Command
         $style = new SymfonyStyle($input, $output);
         $sourceRootPath = Environment::getSourceRootPath();
         require_once "$sourceRootPath/SimpleDemo.php";
-        runSimpleDemo();
+        runSimpleDemo(ConfigurationValues::fromArray([]));
     }
 }
