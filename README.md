@@ -74,5 +74,5 @@ bin/app gen-algo:tutorial
 - [DONE] integrate as command
 - [DONE] add configuration object feature/mad654/configuration
 - [DONE] make file fetches own local composer to bin/composer
-- emmit events [start, ok, error]
+- [PROGRESS] emmit events [start, ok, error] feature/mad654/emit-events
 - log events as json together with configuration (Monolog json logger ???)
