@@ -2,9 +2,11 @@
 build: vendor etc/config
 
 test: build
-	bin/app example:hello-world
+	bin/app gen-algo:tutorial
 
-vendor: composer.json composer.lock
+vendor: composer.lock
+
+composer.lock: composer.json
 	@composer install
 
 etc/config: etc/config.example

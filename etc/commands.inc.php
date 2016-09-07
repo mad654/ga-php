@@ -14,5 +14,5 @@ return [
      * instead of:
      *   [2016-08-28 20:53:52] EXAMPLE_APP.ERROR: A DEMO ERROR
      */
-    new \Example\Console\HelloWorldCommand($logger->withName($logger->getName() . '.HELLO_WORLD'))
+    new \GenAlgo\Console\TutorialCommand($logger->withName($logger->getName() . '.GEN_ALGO'))
 ];

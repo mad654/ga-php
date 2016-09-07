@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Example;
+namespace GenAlgo;
 
 
 class Environment
@@ -18,5 +18,13 @@ class Environment
         }
 
         return $result;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getSourceRootPath()
+    {
+        return self::get('APP_SRC_DIR');
     }
 }

@@ -1,12 +1,9 @@
-# Changes for *boilerplate-php-command-line*
+# Changes for *ga-php*
 
-- integrate monologger
-- integrate .env support via `vlucas/phpdotenv`
-- integrate `symfony/console` and provide a application startpoint
+- Integrated SimpleDemo as a command
 
-  Start the app via:
+  Start it via:
   ```
-  bin/app
+  bin/app gen-algo:tutorial
   ```
 
-  Register new commands in `etc/commands.inc.php`.
