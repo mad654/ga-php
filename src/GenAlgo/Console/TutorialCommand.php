@@ -20,6 +20,11 @@ class TutorialCommand extends Command
     private $logger;
 
     /**
+     * @var SymfonyStyle
+     */
+    private $io;
+
+    /**
      * TutorialCommand constructor.
      */
     public function __construct(LoggerInterface $logger)
@@ -38,15 +43,49 @@ class TutorialCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $style = new SymfonyStyle($input, $output);
+        $this->io = new SymfonyStyle($input, $output);
+
+        ini_set('memory_limit', Environment::getAppMemoryLimit());
+        $this->runSimpleDemo();
+    }
+
+    /**
+     * Run simple demo for TEST_COUNT times
+     */
+    private function runSimpleDemo()
+    {
         $sourceRootPath = Environment::getSourceRootPath();
         require_once "$sourceRootPath/SimpleDemo.php";
-        runSimpleDemo(
-            Environment::getTargetNumber(),
-            Environment::getTestCount(),
-            Environment::getEvolutionParameters()
-        );
 
+        $commitId       = Environment::getCurrentCommitHash();
+        $searchedValue  = Environment::getTargetNumber();
+        $testCount      = Environment::getTestCount();
+        $c              = Environment::getEvolutionParameters();
+
+        for ($i = 1; $i <= $testCount; $i++) {
+            $start = microtime(true);
+
+            echo "$commitId ";
+            echo $c->PopulationSize() . ' ';
+            echo $c->CrossoverRate() . ' ';
+            echo $c->MutationRate() . ' ';
+            echo CHROMOSOME_LENGTH . ' ';
+            echo $searchedValue . ' ';
+            echo $c->MaxSelectionAttempts() . ' ';
+            echo date(DATE_ATOM) . ' ';
+            echo "$i/" . $testCount . " ";
+            $result = simpleDemo($searchedValue, $c);
+            $stop = microtime(true);
+            $diff = $stop - $start;
+
+            echo array_shift($result) . ' ';
+            echo implode(';', $result) . ' ';
+
+            echo date(DATE_ATOM) . ' ';
+            echo "$start $stop $diff";
+            echo PHP_EOL;
+        }
+    }
         /**
          * RESULT LOGGING SPEC
          *
@@ -71,7 +110,7 @@ class TutorialCommand extends Command
          *
          * - started [\DateTime]
          * - stopped [\DateTime]
-         * 
+         *
          * CMD IO SPEC
          * - progress test count: x/y done
          *   - selection counter x/MAX
@@ -79,5 +118,4 @@ class TutorialCommand extends Command
          *   - result
          *   - runtime in sec
          */
-    }
 }

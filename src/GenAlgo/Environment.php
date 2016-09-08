@@ -61,4 +61,21 @@ class Environment
     {
         return self::get('TEST_COUNT');
     }
+
+    /**
+     * @return string
+     */
+    public static function getCurrentCommitHash()
+    {
+        exec('git rev-list HEAD -n1', $output);
+        return (string) $output[0];
+    }
+
+    /**
+     * @return string
+     */
+    public static function getAppMemoryLimit()
+    {
+        return self::get('APP_MEMORY_LIMIT', '512M');
+    }
 }

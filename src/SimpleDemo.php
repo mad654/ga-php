@@ -369,39 +369,3 @@ function mutate($chromosome, $mutationRate) {
   return implode('', $bits);
 }
 
-/**
- * Run simple demo for TEST_COUNT times
- * @param $searchedValue
- * @param $testCount
- * @param ConfigurationValues $c
- */
-function runSimpleDemo($searchedValue, $testCount, ConfigurationValues $c)
-{
-    ini_set('memory_limit', '512M');
-    exec('git rev-list HEAD -n1', $output);
-    $commitId = $output[0];
-
-    for ($i = 1; $i <= $testCount; $i++) {
-        $start = microtime(true);
-
-        echo "$commitId ";
-        echo $c->PopulationSize() . ' ';
-        echo $c->CrossoverRate() . ' ';
-        echo $c->MutationRate() . ' ';
-        echo CHROMOSOME_LENGTH . ' ';
-        echo $searchedValue . ' ';
-        echo $c->MaxSelectionAttempts() . ' ';
-        echo date(DATE_ATOM) . ' ';
-        echo "$i/" . $testCount . " ";
-        $result = simpleDemo($searchedValue, $c);
-        $stop = microtime(true);
-        $diff = $stop - $start;
-
-        echo array_shift($result) . ' ';
-        echo implode(';', $result) . ' ';
-
-        echo date(DATE_ATOM) . ' ';
-        echo "$start $stop $diff";
-        echo PHP_EOL;
-    }
-}
