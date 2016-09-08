@@ -46,5 +46,38 @@ class TutorialCommand extends Command
             Environment::getTestCount(),
             Environment::getEvolutionParameters()
         );
+
+        /**
+         * RESULT LOGGING SPEC
+         *
+         * - result_type ['OK', 'SELECTION_TIMEOUT', 'POPULATION_TIMEOUT']
+         * - result
+         * - result_data
+         * - runtime
+         *
+         * - runUuid
+         * - hostname
+         * - git_commit
+         *
+         * - population_size
+         * - crossover_rate
+         * - mutation_rate
+         * - max_selection_attempts
+         * - max_population_count
+         *
+         * - searched
+         * - test_count
+         * - last_population_number
+         *
+         * - started [\DateTime]
+         * - stopped [\DateTime]
+         * 
+         * CMD IO SPEC
+         * - progress test count: x/y done
+         *   - selection counter x/MAX
+         *   - population counter x/MAX
+         *   - result
+         *   - runtime in sec
+         */
     }
 }
