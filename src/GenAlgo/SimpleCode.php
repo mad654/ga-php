@@ -1,5 +1,7 @@
 <?php
 
+namespace GenAlgo;
+
 class SimpleCode
 {
   private $code;

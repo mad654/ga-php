@@ -21,14 +21,6 @@ class Environment
     }
 
     /**
-     * @return string
-     */
-    public static function getSourceRootPath()
-    {
-        return self::get('APP_SRC_DIR');
-    }
-
-    /**
      * @return ConfigurationValues
      */
     public static function getEvolutionParameters()

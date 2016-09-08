@@ -24,7 +24,7 @@ bin/app gen-algo:tutorial
 ### How it works and what it does
 
 Implements this [tutorial](http://www.ai-junkie.com/ga/intro/gat1.html)
-See [src/SimpleDemo.php](src/SimpleDemo.php) for details.
+See [src/GenAlgo/SimpleAlgorithm.php](src/GenAlgo/SimpleAlgorithm.php) for details.
 
 ### Required parameters
 

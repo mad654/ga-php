@@ -1,5 +1,7 @@
 <?php
 
+namespace GenAlgo;
+
 class SelectionException extends \Exception
 {
   public function __construct($maxSelectionAttemps, $population) {

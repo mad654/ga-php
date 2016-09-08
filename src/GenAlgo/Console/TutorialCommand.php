@@ -7,6 +7,7 @@ namespace GenAlgo\Console;
 use GenAlgo\ConfigurationValues;
 use GenAlgo\Environment;
 use Psr\Log\LoggerInterface;
+use GenAlgo\SimpleAlgorithm;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -54,8 +55,7 @@ class TutorialCommand extends Command
      */
     private function runSimpleDemo()
     {
-        $sourceRootPath = Environment::getSourceRootPath();
-        require_once "$sourceRootPath/SimpleDemo.php";
+        $simpleDemo = new SimpleAlgorithm();
 
         $commitId       = Environment::getCurrentCommitHash();
         $searchedValue  = Environment::getTargetNumber();
@@ -69,12 +69,12 @@ class TutorialCommand extends Command
             echo $c->PopulationSize() . ' ';
             echo $c->CrossoverRate() . ' ';
             echo $c->MutationRate() . ' ';
-            echo CHROMOSOME_LENGTH . ' ';
+            echo SimpleAlgorithm::CHROMOSOME_LENGTH . ' ';
             echo $searchedValue . ' ';
             echo $c->MaxSelectionAttempts() . ' ';
             echo date(DATE_ATOM) . ' ';
             echo "$i/" . $testCount . " ";
-            $result = simpleDemo($searchedValue, $c);
+            $result = $simpleDemo->findSolution($searchedValue, $c);
             $stop = microtime(true);
             $diff = $stop - $start;
 
