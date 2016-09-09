@@ -51,6 +51,45 @@ class TutorialCommand extends Command
     }
 
     /**
+     * @todo SimpleAlgorithm->findSolution should return result like this and should be logged
+     *
+     * RESULT LOGGING SPEC
+     *
+     * ComputationData:
+         * ComputationRequest
+         * - searched
+         * - test_count - von/bis
+         * - ConfigurationValues
+         *   - population_size -> ConfigurationValues
+         *   - crossover_rate -> ConfigurationValues
+         *   - mutation_rate -> ConfigurationValues
+         *   - max_selection_attempts -> ConfigurationValues
+         *   - max_population_count -> ConfigurationValues
+         *
+         * ComputationResult
+         * - started [\DateTime]
+         * - stopped [\DateTime]
+         * - result_type ['OK', 'SELECTION_TIMEOUT', 'POPULATION_TIMEOUT']
+         * - result
+         * - result_data
+         * - runtime
+         * - last_population_number
+         *
+         * ComputationEnvironment
+         * - runUuid -> Environment
+         * - hostname -> Environment
+         * - git_commit -> Environment
+         *
+     *
+     *
+     * CMD IO SPEC
+     * - progress test count: x/y done
+     *   - selection counter x/MAX
+     *   - population counter x/MAX
+     *   - result
+     *   - runtime in sec
+     */
+    /**
      * Run simple demo for TEST_COUNT times
      */
     private function runSimpleDemo()
@@ -86,36 +125,4 @@ class TutorialCommand extends Command
             echo PHP_EOL;
         }
     }
-        /**
-         * RESULT LOGGING SPEC
-         *
-         * - result_type ['OK', 'SELECTION_TIMEOUT', 'POPULATION_TIMEOUT']
-         * - result
-         * - result_data
-         * - runtime
-         *
-         * - runUuid
-         * - hostname
-         * - git_commit
-         *
-         * - population_size
-         * - crossover_rate
-         * - mutation_rate
-         * - max_selection_attempts
-         * - max_population_count
-         *
-         * - searched
-         * - test_count
-         * - last_population_number
-         *
-         * - started [\DateTime]
-         * - stopped [\DateTime]
-         *
-         * CMD IO SPEC
-         * - progress test count: x/y done
-         *   - selection counter x/MAX
-         *   - population counter x/MAX
-         *   - result
-         *   - runtime in sec
-         */
 }
