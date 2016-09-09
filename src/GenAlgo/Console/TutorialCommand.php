@@ -4,6 +4,7 @@
 namespace GenAlgo\Console;
 
 
+use GenAlgo\ComputationData\ComputationRequest;
 use GenAlgo\ConfigurationValues;
 use GenAlgo\Environment;
 use Psr\Log\LoggerInterface;
@@ -55,32 +56,21 @@ class TutorialCommand extends Command
      *
      * RESULT LOGGING SPEC
      *
-     * ComputationData:
-         * ComputationRequest
-         * - searched
-         * - test_count - von/bis
-         * - ConfigurationValues
-         *   - population_size -> ConfigurationValues
-         *   - crossover_rate -> ConfigurationValues
-         *   - mutation_rate -> ConfigurationValues
-         *   - max_selection_attempts -> ConfigurationValues
-         *   - max_population_count -> ConfigurationValues
-         *
-         * ComputationResult
-         * - started [\DateTime]
-         * - stopped [\DateTime]
-         * - result_type ['OK', 'SELECTION_TIMEOUT', 'POPULATION_TIMEOUT']
-         * - result
-         * - result_data
-         * - runtime
-         * - last_population_number
-         *
-         * ComputationEnvironment
-         * - runUuid -> Environment
-         * - hostname -> Environment
-         * - git_commit -> Environment
-         *
+     * $run = ComputationRun($computationEnvironment)
+     * $request = $run->createRequest($searched, $currentTestCount, $maxTestCount)
+     * run($request) [ calls $request->createResult an keeps reference to result ]
+     * echo implode (' ', $run->toArray());
      *
+     * toArray Results in:
+     * ComputationRun:
+     *   - details of ComputationEnvironment
+     *   - details of ComputationRequest
+     *   - details of ComputationResult
+     *
+     * ComputationEnvironment:
+     *   - runUuid -> Environment (derived from pid)
+     *   - hostname -> Environment
+     *   - git_commit -> Environment
      *
      * CMD IO SPEC
      * - progress test count: x/y done
@@ -102,27 +92,10 @@ class TutorialCommand extends Command
         $c              = Environment::getEvolutionParameters();
 
         for ($i = 1; $i <= $testCount; $i++) {
-            $start = microtime(true);
-
             echo "$commitId ";
-            echo $c->PopulationSize() . ' ';
-            echo $c->CrossoverRate() . ' ';
-            echo $c->MutationRate() . ' ';
-            echo SimpleAlgorithm::CHROMOSOME_LENGTH . ' ';
-            echo $searchedValue . ' ';
-            echo $c->MaxSelectionAttempts() . ' ';
-            echo date(DATE_ATOM) . ' ';
-            echo "$i/" . $testCount . " ";
-            $result = $simpleDemo->findSolution($searchedValue, $c);
-            $stop = microtime(true);
-            $diff = $stop - $start;
-
-            echo array_shift($result) . ' ';
-            echo implode(';', $result) . ' ';
-
-            echo date(DATE_ATOM) . ' ';
-            echo "$start $stop $diff";
-            echo PHP_EOL;
+            $r = ComputationRequest::from($searchedValue, $i, $testCount, $c);
+            $result = $simpleDemo->findSolution($r);
+            echo implode(' ', $result->toArray()) . PHP_EOL;
         }
     }
 }

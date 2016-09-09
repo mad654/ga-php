@@ -4,7 +4,9 @@
 namespace GenAlgo;
 
 
-class ConfigurationValues
+use Common\ArrayAble;
+
+class ConfigurationValues implements ArrayAble
 {
     private $maxPopulations = 100;
     private $populationSize = 100;

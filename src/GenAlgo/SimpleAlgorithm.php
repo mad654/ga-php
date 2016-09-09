@@ -2,6 +2,8 @@
 
 namespace GenAlgo;
 
+use GenAlgo\ComputationData\ComputationRequest;
+use GenAlgo\ComputationData\ComputationResult;
 use GenAlgo\ConfigurationValues;
 use GenAlgo\SolutionException;
 use GenAlgo\SelectionException;
@@ -32,12 +34,16 @@ class SimpleAlgorithm
 #const MUTATION_RATE     = 0.09609375;
 
     /**
-     * @param $searchedValue
-     * @param ConfigurationValues $c
-     * @return array
+     * @param ComputationRequest $request
+     * @return ComputationResult
      */
-    public function findSolution($searchedValue, ConfigurationValues $c)
+    public function findSolution(ComputationRequest $request)
     {
+        $result = new ComputationResult($request);
+        $result->start();
+        $searchedValue = $request->getSearched();
+        $c = $request->getConfiguration();
+
         // todo: mann: store intial population of long running
         // todo: mann: test optimal parameters
         // todo: mann: are optimal parameters generic or problem related?
@@ -50,14 +56,9 @@ class SimpleAlgorithm
             try {
                 $new = $this->generateNewPopulation($population, $code, $c, $searchedValue);
             } catch (SolutionException $e) {
-                return [$counter, $e->getMessage()];
+                return $result->foundResult($e->getMessage(), [], $counter);
             } catch (SelectionException $e) {
-                return [
-                    $counter,
-                    $e->getMessage(),
-                    implode(',', $intialPopulation),
-                    implode(',', $population)
-                ];
+                return $result->selectionTimedOut($population, $counter);
             }
 
             $counter++;
@@ -65,12 +66,7 @@ class SimpleAlgorithm
             $population = $new;
 
             if ($counter >= $c->MaxPopulations()) {
-                return [
-                    $counter,
-                    'TIMEOUT',
-                    implode(',', $intialPopulation),
-                    implode(',', $population)
-                ];
+                return $result->populationTimedOut($population, $counter);
             }
         }
     }
