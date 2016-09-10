@@ -86,13 +86,13 @@ class TutorialCommand extends Command
     {
         $simpleDemo = new SimpleAlgorithm();
 
-        $commitId       = Environment::getCurrentCommitHash();
+        $environment    = Environment::getComputationEnvironment();
         $searchedValue  = Environment::getTargetNumber();
         $testCount      = Environment::getTestCount();
         $c              = Environment::getEvolutionParameters();
 
         for ($i = 1; $i <= $testCount; $i++) {
-            echo "$commitId ";
+            echo implode(' ', $environment->toArray()) . ' ';
             $r = ComputationRequest::from($searchedValue, $i, $testCount, $c);
             $result = $simpleDemo->findSolution($r);
             echo implode(' ', $result->toArray()) . PHP_EOL;
