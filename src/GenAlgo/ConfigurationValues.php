@@ -4,52 +4,20 @@
 namespace GenAlgo;
 
 
-use Common\ArrayAble;
+use Common\AbstractDataObject;
 
-class ConfigurationValues implements ArrayAble
+
+class ConfigurationValues extends AbstractDataObject
 {
-    private $maxPopulations = 100;
-    private $populationSize = 100;
+    protected $maxPopulations = 100;
+    protected $populationSize = 100;
 
-    private $crossoverRate = 0.7;
-    private $mutationRate = 0.001;
-    private $maxSelectionAttempts = 10000;
+    protected $crossoverRate = 0.7;
+    protected $mutationRate = 0.001;
+    protected $maxSelectionAttempts = 10000;
 
-    private function __construct() {
+    protected function __construct() {
 
-    }
-
-    /**
-     * @param array $configData
-     * @return ConfigurationValues
-     */
-    public static function fromArray($configData)
-    {
-        $result = new ConfigurationValues();
-
-        foreach ($configData as $key => $value) {
-            if (!property_exists($result, $key)) {
-                throw new \InvalidArgumentException("Undefined property: $key");
-            }
-
-            $result->$key = $value;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return array
-     */
-    public function toArray()
-    {
-        $result = [];
-
-        foreach ($this as $key => $value) {
-            $result[$key] = $value;
-        }
-
-        return $result;
     }
 
     /**
