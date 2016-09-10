@@ -5,7 +5,6 @@ namespace GenAlgo\Console;
 
 
 use GenAlgo\ComputationData\ComputationRequest;
-use GenAlgo\ConfigurationValues;
 use GenAlgo\Environment;
 use Psr\Log\LoggerInterface;
 use GenAlgo\SimpleAlgorithm;
@@ -67,11 +66,6 @@ class TutorialCommand extends Command
      *   - details of ComputationRequest
      *   - details of ComputationResult
      *
-     * ComputationEnvironment:
-     *   - runUuid -> Environment (derived from pid)
-     *   - hostname -> Environment
-     *   - git_commit -> Environment
-     *
      * CMD IO SPEC
      * - progress test count: x/y done
      *   - selection counter x/MAX
@@ -79,6 +73,7 @@ class TutorialCommand extends Command
      *   - result
      *   - runtime in sec
      */
+
     /**
      * Run simple demo for TEST_COUNT times
      */
@@ -87,15 +82,16 @@ class TutorialCommand extends Command
         $simpleDemo = new SimpleAlgorithm();
 
         $environment    = Environment::getComputationEnvironment();
+        $c              = Environment::getEvolutionParameters();
         $searchedValue  = Environment::getTargetNumber();
         $testCount      = Environment::getTestCount();
-        $c              = Environment::getEvolutionParameters();
 
         for ($i = 1; $i <= $testCount; $i++) {
-            echo implode(' ', $environment->toArray()) . ' ';
             $r = ComputationRequest::from($searchedValue, $i, $testCount, $c);
             $result = $simpleDemo->findSolution($r);
-            echo implode(' ', $result->toArray()) . PHP_EOL;
+
+            $output = array_merge($environment->toArray(), $result->toArray());
+            echo implode(' ', $output) . PHP_EOL;
         }
     }
 }
