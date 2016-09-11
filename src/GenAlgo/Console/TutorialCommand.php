@@ -7,6 +7,10 @@ namespace GenAlgo\Console;
 use GenAlgo\AlgorithmTestRunner;
 use GenAlgo\ComputationData\ComputationRequest;
 use GenAlgo\Environment;
+use GenAlgo\Event\RunFinishedEvent;
+use GenAlgo\Event\RunStartedEvent;
+use GenAlgo\Event\SingleTestFinished;
+use GenAlgo\Event\SingleTestStarted;
 use Psr\Log\LoggerInterface;
 use GenAlgo\SimpleAlgorithm;
 use Symfony\Component\Console\Command\Command;
@@ -14,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class TutorialCommand extends Command
+class TutorialCommand extends Command implements AlgorithmTestRunner\EventListenerInterface
 {
     /**
      * @var LoggerInterface
@@ -86,6 +90,40 @@ class TutorialCommand extends Command
             Environment::getEvolutionParameters()
         );
 
+        $runner->addEventListener($this);
         $runner->run(Environment::getTargetNumber(), Environment::getTestCount());
+    }
+
+    /**
+     * @param RunStartedEvent $e
+     */
+    public function handleRunStarted(RunStartedEvent $e)
+    {
+        // TODO: Implement handleRunStarted() method.
+    }
+
+    /**
+     * @param SingleTestStarted $e
+     */
+    public function handleSingleTestStarted(SingleTestStarted $e)
+    {
+        // TODO: Implement handleSingleTestStarted() method.
+    }
+
+    /**
+     * @param SingleTestFinished $e
+     */
+    public function handleSingleTestFinished(SingleTestFinished $e)
+    {
+        $output = array_merge($e->getEnvironment()->toArray(), $e->getResult()->toArray());
+        echo implode(' ', $output) . PHP_EOL;
+    }
+
+    /**
+     * @param RunFinishedEvent $e
+     */
+    public function handleRunFinished(RunFinishedEvent $e)
+    {
+        // TODO: Implement handleRunFinished() method.
     }
 }

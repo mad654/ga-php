@@ -2,6 +2,7 @@
 
 namespace GenAlgo;
 
+use GenAlgo\AlgorithmTestRunner\EventListenerInterface;
 use GenAlgo\ComputationData\ComputationRequest;
 use GenAlgo\ComputationData\ComputationResult;
 use GenAlgo\SimpleAlgorithm\SolutionException;
@@ -377,6 +378,22 @@ class SimpleAlgorithm implements AlgorithmInterface
         }
 
         return implode('', $bits);
+    }
+
+    /**
+     * @param EventListenerInterface $listener
+     */
+    public function addEventListener(EventListenerInterface $listener)
+    {
+        // TODO: Implement addEventListener() method.
+    }
+
+    /**
+     * @param EventListenerInterface $listener
+     */
+    public function removeEventListener(EventListenerInterface $listener)
+    {
+        // TODO: Implement removeEventListener() method.
     }
 }
 

@@ -4,8 +4,10 @@
 namespace GenAlgo;
 
 
+use GenAlgo\AlgorithmTestRunner\EventListenerInterface;
 use GenAlgo\ComputationData\ComputationEnvironment;
 use GenAlgo\ComputationData\ComputationRequest;
+use GenAlgo\ComputationData\ComputationResult;
 
 class AlgorithmTestRunner
 {
@@ -25,6 +27,11 @@ class AlgorithmTestRunner
     private $environment;
 
     /**
+     * @var EventListenerInterface || \SplObjectStorage
+     */
+    private $eventListener;
+
+    /**
      * AlgorithmTestRunner constructor.
      * @param AlgorithmInterface $algorithm
      * @param ConfigurationValues $evolutionConfig
@@ -38,6 +45,7 @@ class AlgorithmTestRunner
         $this->algorithm = $algorithm;
         $this->evolutionConfig = $evolutionConfig;
         $this->environment = $environment;
+        $this->eventListener = new \SplObjectStorage();
     }
 
 
@@ -47,12 +55,59 @@ class AlgorithmTestRunner
      */
     public function run($target, $testCount)
     {
-        for ($i = 1; $i <= $testCount; $i++) {
-            $r = ComputationRequest::from($target, $i, $testCount, $this->evolutionConfig);
-            $result = $this->algorithm->findSolution($r);
+        $this->notifyRunStarted();
 
-            $output = array_merge($this->environment->toArray(), $result->toArray());
-            echo implode(' ', $output) . PHP_EOL;
+        for ($i = 1; $i <= $testCount; $i++) {
+            $request = ComputationRequest::from($target, $i, $testCount, $this->evolutionConfig);
+
+            $this->notifySingleTestStarted($request);
+            $result = $this->algorithm->findSolution($request);
+            $this->notifySingleTestFinished($result);
+        }
+
+        $this->notifyRunFinished();
+    }
+
+    /**
+     * @param EventListenerInterface $listener
+     */
+    public function addEventListener(EventListenerInterface $listener) {
+        $this->eventListener->attach($listener);
+        $this->algorithm->addEventListener($listener);
+    }
+
+    /**
+     * @param EventListenerInterface $listener
+     */
+    public function removeEventListener(EventListenerInterface $listener) {
+        $this->algorithm->removeEventListener($listener);
+        $this->eventListener->detach($listener);
+    }
+
+    private function notifyRunStarted()
+    {
+        $this->notify(new Event\RunStartedEvent($this->environment), 'handleRunStarted');
+    }
+
+    private function notifySingleTestStarted(ComputationRequest $request)
+    {
+        $this->notify(new Event\SingleTestStarted($request, $this->environment), 'handleSingleTestStarted');
+    }
+
+    private function notifySingleTestFinished(ComputationResult $result)
+    {
+        $this->notify(new Event\SingleTestFinished($result, $this->environment), 'handleSingleTestFinished');
+    }
+
+    private function notifyRunFinished()
+    {
+        $this->notify(new Event\RunFinishedEvent($this->environment), 'handleRunFinished');
+    }
+
+    private function notify($event, $listenerFunction)
+    {
+        foreach ($this->eventListener as $listener) {
+            $listener->$listenerFunction($event);
         }
     }
 }
