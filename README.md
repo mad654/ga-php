@@ -70,9 +70,44 @@ MAX_SELECTION_ATTEMPTS=10000 \
 bin/app gen-algo:tutorial
 ```
 
+### Events
+
+Currently this events are fired and handled for logging purposes, to give
+you a idea whats going on.
+
+#### AlgorithmTestRunner events
+
+This 4 events represent the current state of test runner.
+
+- [RunStartedEvent](src/GenAlgo/Event/RunStartedEvent.php)
+- [SingleTestStarted](src/GenAlgo/Event/SingleTestStarted.php)
+- [SingleTestFinished](src/GenAlgo/Event/SingleTestFinished.php)
+- [RunFinishedEvent](src/GenAlgo/Event/RunFinishedEvent.php)
+
+You can see which results were calculated by
+
+```
+tail -f var/cache/debug.log | grep GENALGO.GEN_ALGO.INFO
+```
+
+#### Algorithm events
+
+This events represent the current internal state of the algorithm. So
+if you wan't to take a deeper lock, this will be you friend:
+
+```
+tail -f var/cache/debug.log | grep GENALGO.GEN_ALGO.DEBUG
+```
+
+- [NewOutcomeCreated](src/GenAlgo/Event/NewOutcomeCreated.php)
+- [PopulationCreated](src/GenAlgo/Event/PopulationCreated.php)
+- [SpezSelected](src/GenAlgo/Event/SpezSelected.php)
+- [PairSelected](src/GenAlgo/Event/PairSelected.php)
+- [PopulationFitnessCalculated](src/GenAlgo/Event/PopulationFitnessCalculated.php)
+
 ## ROADMAP
 - [DONE] integrate as command
 - [DONE] add configuration object feature/mad654/configuration
 - [DONE] make file fetches own local composer to bin/composer
-- [PROGRESS] emmit events [start, ok, error] feature/mad654/emit-events
+- [DONE] emmit events [start, ok, error] feature/mad654/emit-events
 - log events as json together with configuration (Monolog json logger ???)
