@@ -110,4 +110,7 @@ tail -f var/cache/debug.log | grep GENALGO.TUTORIAL.DEBUG
 - [DONE] add configuration object feature/mad654/configuration
 - [DONE] make file fetches own local composer to bin/composer
 - [DONE] emmit events [start, ok, error] feature/mad654/emit-events
-- log events as json together with configuration (Monolog json logger ???)
+- Find tool to analyse log entries which can:
+   - group log entries
+   - calc min/max/avg
+   - draw charts
