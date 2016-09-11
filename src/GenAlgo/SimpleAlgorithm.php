@@ -4,8 +4,9 @@ namespace GenAlgo;
 
 use GenAlgo\ComputationData\ComputationRequest;
 use GenAlgo\ComputationData\ComputationResult;
+use GenAlgo\SimpleAlgorithm\SolutionException;
+use GenAlgo\SimpleAlgorithm\SimpleCode;
 use GenAlgo\ConfigurationValues;
-use GenAlgo\SolutionException;
 use GenAlgo\SelectionException;
 
 // todo:mann test 24k with 0.09609375 AND 0.09375 each in one process

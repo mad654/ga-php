@@ -1,5 +1,5 @@
 <?php
 
-namespace GenAlgo;
+namespace GenAlgo\SimpleAlgorithm;
 
 class SolutionException extends \Exception {}
