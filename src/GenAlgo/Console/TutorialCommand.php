@@ -7,10 +7,15 @@ namespace GenAlgo\Console;
 use GenAlgo\AlgorithmTestRunner;
 use GenAlgo\ComputationData\ComputationRequest;
 use GenAlgo\Environment;
+use GenAlgo\Event\NewOutcomeCreated;
+use GenAlgo\Event\PairSelected;
+use GenAlgo\Event\PopulationCreated;
+use GenAlgo\Event\PopulationFitnessCalculated;
 use GenAlgo\Event\RunFinishedEvent;
 use GenAlgo\Event\RunStartedEvent;
 use GenAlgo\Event\SingleTestFinished;
 use GenAlgo\Event\SingleTestStarted;
+use GenAlgo\Event\SpezSelected;
 use Psr\Log\LoggerInterface;
 use GenAlgo\SimpleAlgorithm;
 use Symfony\Component\Console\Command\Command;
@@ -99,7 +104,7 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
      */
     public function handleRunStarted(RunStartedEvent $e)
     {
-        // TODO: Implement handleRunStarted() method.
+        $this->logger->info('RunStartedEvent');
     }
 
     /**
@@ -107,7 +112,7 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
      */
     public function handleSingleTestStarted(SingleTestStarted $e)
     {
-        // TODO: Implement handleSingleTestStarted() method.
+        $this->logger->info('SingleTestStarted');
     }
 
     /**
@@ -126,6 +131,31 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
      */
     public function handleRunFinished(RunFinishedEvent $e)
     {
-        // TODO: Implement handleRunFinished() method.
+        $this->logger->info('RunFinishedEvent');
+    }
+
+    public function handleSpezSelected(SpezSelected $e)
+    {
+        $this->logger->debug('SpezSelected');
+    }
+
+    public function handleNewOutcomeCreated(NewOutcomeCreated $e)
+    {
+        $this->logger->debug('NewOutcomeCreated');
+    }
+
+    public function handlePairSelected(PairSelected $e)
+    {
+        $this->logger->debug('PairSelected');
+    }
+
+    public function handlePopulationFitnessCalculated(PopulationFitnessCalculated $e)
+    {
+        $this->logger->debug('PopulationFitnessCalculated');
+    }
+
+    public function handlePopulationCreated(PopulationCreated $e)
+    {
+        $this->logger->debug('PopulationCreated');
     }
 }

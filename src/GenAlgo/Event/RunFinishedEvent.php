@@ -17,7 +17,7 @@ class RunFinishedEvent
      */
     public function __construct(ComputationEnvironment $environment)
     {
-        $this->environment;
+        $this->environment = $environment;
     }
 
     /**

@@ -5,10 +5,18 @@ namespace GenAlgo;
 use GenAlgo\AlgorithmTestRunner\EventListenerInterface;
 use GenAlgo\ComputationData\ComputationRequest;
 use GenAlgo\ComputationData\ComputationResult;
+
 use GenAlgo\SimpleAlgorithm\SolutionException;
 use GenAlgo\SimpleAlgorithm\SimpleCode;
 use GenAlgo\ConfigurationValues;
 use GenAlgo\SelectionException;
+
+use GenAlgo\Event\NewOutcomeCreated;
+use GenAlgo\Event\PairSelected;
+use GenAlgo\Event\PopulationCreated;
+use GenAlgo\Event\PopulationFitnessCalculated;
+use GenAlgo\Event\SpezSelected;
+
 
 // todo:mann test 24k with 0.09609375 AND 0.09375 each in one process
 class SimpleAlgorithm implements AlgorithmInterface
@@ -31,9 +39,43 @@ class SimpleAlgorithm implements AlgorithmInterface
     ];
     const CHROMOSOME_LENGTH = 9;
 
+    private $eventListener;
+
+    public function __construct()
+    {
+        $this->eventListener = new \SplObjectStorage();
+    }
+
+    /**
+     * @param EventListenerInterface $listener
+     */
+    public function addEventListener(EventListenerInterface $listener)
+    {
+        $this->eventListener->attach($listener);
+    }
+
+    /**
+     * @param EventListenerInterface $listener
+     */
+    public function removeEventListener(EventListenerInterface $listener)
+    {
+        $this->eventListener->detach($listener);
+    }
+
+    /**
+     * @param $event
+     * @param $listenerFunction
+     */
+    private function notify($event, $listenerFunction) {
+        foreach ($this->eventListener as $listener) {
+            $listener->$listenerFunction($event);
+        }
+    }
+
 # interesting MUTATION_RATES
 #const MUTATION_RATE     = 0.09375;
 #const MUTATION_RATE     = 0.09609375;
+
 
     /**
      * @param ComputationRequest $request
@@ -51,7 +93,8 @@ class SimpleAlgorithm implements AlgorithmInterface
         // todo: mann: are optimal parameters generic or problem related?
         $code = new SimpleCode(self::CODE);
         $population = $this->initPopulation($code, $c->PopulationSize(), self::CHROMOSOME_LENGTH);
-        $intialPopulation = $population;
+        $this->notify(new PopulationCreated(1, $population), 'handlePopulationCreated');
+
         $counter = 1;
 
         while (true) {
@@ -64,12 +107,13 @@ class SimpleAlgorithm implements AlgorithmInterface
             }
 
             $counter++;
-            # echo "New population found: $counter" . PHP_EOL;
             $population = $new;
 
             if ($counter >= $c->MaxPopulations()) {
                 return $result->populationTimedOut($population, $counter);
             }
+
+            $this->notify(new PopulationCreated($counter, $population), 'handlePopulationCreated');
         }
     }
 
@@ -122,22 +166,24 @@ class SimpleAlgorithm implements AlgorithmInterface
         $newPopulation = [];
         $fitness = $this->testPoputlation($population, $code, $searched);
         $populationFitness = $this->calcFitnessSum($fitness) / count($population);
-        # echo "avg population fitness: $populationFitness" . PHP_EOL;
+        $this->notify(
+            new PopulationFitnessCalculated($populationFitness, $population),
+            'handlePopulationFitnessCalculated'
+        );
 
         while (count($population) > count($newPopulation)) {
             list($spez1, $spez2) = $this->selectPair($fitness, $c);
-            # echo "Selected >> ";
-            # echo implode(' ', $spez1) . " - ";
-            # echo implode(' ', $spez2) . PHP_EOL;
+            $this->notify(new PairSelected($spez1, $spez2), 'handlePairSelected');
 
             list($newSpez1, $newSpez2) = $this->sex($spez1['chromosome'], $spez2['chromosome'], $c);
-            # echo "Children >> $newSpez1 - $newSpez2" . PHP_EOL;
 
             if (!empty($newSpez1)) {
+                $this->notify(new NewOutcomeCreated($newSpez1), 'handleNewOutcomeCreated');
                 $newPopulation[] = $newSpez1;
             }
 
             if (!empty($newSpez2)) {
+                $this->notify(new NewOutcomeCreated($newSpez1), 'handleNewOutcomeCreated');
                 $newPopulation[] = $newSpez2;
             }
         }
@@ -156,13 +202,8 @@ class SimpleAlgorithm implements AlgorithmInterface
         $fitnessAbsolute = [];
 
         foreach ($population as $spez) {
-            # echo "Testing spez $spez >> ";
             $decoded = $code->decode($spez);
-            # echo "$decoded >> ";
-
             $fitness = $this->calculateFittness($searched, $decoded);
-            # echo "Fittness: $fitness ";
-            # echo "... done" . PHP_EOL;
 
             $fitnessAbsolute[] = [
                 'chromosome' => $spez,
@@ -293,7 +334,10 @@ class SimpleAlgorithm implements AlgorithmInterface
 
         while ($spez1['chromosome'] == $spez2['chromosome']) {
             $spez1 = $this->selectSpez($population);
+            $this->notify(new SpezSelected($spez1), 'handleSpezSelected');
+
             $spez2 = $this->selectSpez($population);
+            $this->notify(new SpezSelected($spez2), 'handleSpezSelected');
 
             if ($counter >= $c->MaxSelectionAttempts()) {
                 throw new SelectionException($c->MaxSelectionAttempts(), $population);
@@ -378,22 +422,6 @@ class SimpleAlgorithm implements AlgorithmInterface
         }
 
         return implode('', $bits);
-    }
-
-    /**
-     * @param EventListenerInterface $listener
-     */
-    public function addEventListener(EventListenerInterface $listener)
-    {
-        // TODO: Implement addEventListener() method.
-    }
-
-    /**
-     * @param EventListenerInterface $listener
-     */
-    public function removeEventListener(EventListenerInterface $listener)
-    {
-        // TODO: Implement removeEventListener() method.
     }
 }
 

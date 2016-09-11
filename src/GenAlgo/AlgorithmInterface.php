@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mann
- * Date: 11.09.16
- * Time: 11:07
- */
+
 namespace GenAlgo;
 
 use GenAlgo\AlgorithmTestRunner\EventListenerInterface;
