@@ -4,6 +4,7 @@
 namespace GenAlgo\Console;
 
 
+use GenAlgo\AlgorithmTestRunner;
 use GenAlgo\ComputationData\ComputationRequest;
 use GenAlgo\Environment;
 use Psr\Log\LoggerInterface;
@@ -79,19 +80,12 @@ class TutorialCommand extends Command
      */
     private function runSimpleDemo()
     {
-        $simpleDemo = new SimpleAlgorithm();
+        $runner = new AlgorithmTestRunner(
+            new SimpleAlgorithm(),
+            Environment::getComputationEnvironment(),
+            Environment::getEvolutionParameters()
+        );
 
-        $environment    = Environment::getComputationEnvironment();
-        $c              = Environment::getEvolutionParameters();
-        $searchedValue  = Environment::getTargetNumber();
-        $testCount      = Environment::getTestCount();
-
-        for ($i = 1; $i <= $testCount; $i++) {
-            $r = ComputationRequest::from($searchedValue, $i, $testCount, $c);
-            $result = $simpleDemo->findSolution($r);
-
-            $output = array_merge($environment->toArray(), $result->toArray());
-            echo implode(' ', $output) . PHP_EOL;
-        }
+        $runner->run(Environment::getTargetNumber(), Environment::getTestCount());
     }
 }

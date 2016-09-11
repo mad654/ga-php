@@ -10,7 +10,7 @@ use GenAlgo\ConfigurationValues;
 use GenAlgo\SelectionException;
 
 // todo:mann test 24k with 0.09609375 AND 0.09375 each in one process
-class SimpleAlgorithm
+class SimpleAlgorithm implements AlgorithmInterface
 {
     const CODE = [
         '0000' => '0',
