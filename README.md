@@ -87,7 +87,7 @@ This 4 events represent the current state of test runner.
 You can see which results were calculated by
 
 ```
-tail -f var/cache/debug.log | grep GENALGO.GEN_ALGO.INFO
+tail -f var/cache/debug.log | grep GENALGO.TUTORIAL.INFO
 ```
 
 #### Algorithm events
@@ -96,7 +96,7 @@ This events represent the current internal state of the algorithm. So
 if you wan't to take a deeper look, this will be you friend:
 
 ```
-tail -f var/cache/debug.log | grep GENALGO.GEN_ALGO.DEBUG
+tail -f var/cache/debug.log | grep GENALGO.TUTORIAL.DEBUG
 ```
 
 - [NewOutcomeCreated](src/GenAlgo/Event/NewOutcomeCreated.php)
