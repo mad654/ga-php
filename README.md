@@ -93,7 +93,7 @@ tail -f var/cache/debug.log | grep GENALGO.GEN_ALGO.INFO
 #### Algorithm events
 
 This events represent the current internal state of the algorithm. So
-if you wan't to take a deeper lock, this will be you friend:
+if you wan't to take a deeper look, this will be you friend:
 
 ```
 tail -f var/cache/debug.log | grep GENALGO.GEN_ALGO.DEBUG
