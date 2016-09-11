@@ -5,6 +5,7 @@ namespace GenAlgo\Console;
 
 
 use GenAlgo\AlgorithmTestRunner;
+use GenAlgo\ComputationData\ComputationEnvironment;
 use GenAlgo\ComputationData\ComputationRequest;
 use GenAlgo\Environment;
 use GenAlgo\Event\NewOutcomeCreated;
@@ -34,6 +35,11 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
      * @var SymfonyStyle
      */
     private $io;
+
+    /**
+     * @var ComputationEnvironment
+     */
+    private $currentEnvironment;
 
     /**
      * TutorialCommand constructor.
@@ -104,7 +110,8 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
      */
     public function handleRunStarted(RunStartedEvent $e)
     {
-        $this->logger->info('RunStartedEvent');
+        $this->currentEnvironment = $e->getEnvironment();
+        $this->logger->info('RunStartedEvent', ['env' => $this->currentEnvironment->toArray() ]);
     }
 
     /**
@@ -112,7 +119,7 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
      */
     public function handleSingleTestStarted(SingleTestStarted $e)
     {
-        $this->logger->info('SingleTestStarted');
+        $this->logger->info('SingleTestStarted', ['env' => $this->currentEnvironment->toArray() ]);
     }
 
     /**
@@ -131,31 +138,47 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
      */
     public function handleRunFinished(RunFinishedEvent $e)
     {
-        $this->logger->info('RunFinishedEvent');
+        $this->logger->info('RunFinishedEvent', ['env' => $this->currentEnvironment->toArray() ]);
+        $this->currentEnvironment = null;
     }
 
     public function handleSpezSelected(SpezSelected $e)
     {
-        $this->logger->debug('SpezSelected');
+        $this->logger->debug('SpezSelected', [
+            'data' => $e->toArray(),
+            'env' => $this->currentEnvironment->toArray(),
+        ]);
     }
 
     public function handleNewOutcomeCreated(NewOutcomeCreated $e)
     {
-        $this->logger->debug('NewOutcomeCreated');
+        $this->logger->debug('NewOutcomeCreated', [
+            'data' => $e->toArray(),
+            'env' => $this->currentEnvironment->toArray(),
+        ]);
     }
 
     public function handlePairSelected(PairSelected $e)
     {
-        $this->logger->debug('PairSelected');
+        $this->logger->debug('PairSelected', [
+            'data' => $e->toArray(),
+            'env' => $this->currentEnvironment->toArray(),
+        ]);
     }
 
     public function handlePopulationFitnessCalculated(PopulationFitnessCalculated $e)
     {
-        $this->logger->debug('PopulationFitnessCalculated');
+        $this->logger->debug('PopulationFitnessCalculated', [
+            'data' => $e->toArray(),
+            'env' => $this->currentEnvironment->toArray(),
+        ]);
     }
 
     public function handlePopulationCreated(PopulationCreated $e)
     {
-        $this->logger->debug('PopulationCreated');
+        $this->logger->debug('PopulationCreated', [
+            'data' => $e->toArray(),
+            'env' => $this->currentEnvironment->toArray(),
+        ]);
     }
 }

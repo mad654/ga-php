@@ -10,12 +10,12 @@ class PopulationFitnessCalculated extends PairSelected
     /**
      * @var float
      */
-    private $avgPopulationFitness;
+    protected $avgPopulationFitness;
 
     /**
      * @var array;
      */
-    private $fitnessDetails;
+    protected $fitnessDetails;
 
     /**
      * PopulationFitnessCalculated constructor.

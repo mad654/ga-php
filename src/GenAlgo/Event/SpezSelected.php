@@ -11,7 +11,7 @@ class SpezSelected extends AbstractDataObject
     /**
      * @var mixed
      */
-    private $spez;
+    protected $spez;
 
     /**
      * SpezSelected constructor.

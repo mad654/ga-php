@@ -11,12 +11,12 @@ class PopulationCreated extends AbstractDataObject
     /**
      * @var int
      */
-    private $generation;
+    protected $generation;
 
     /**
      * @var array
      */
-    private $population;
+    protected $population;
 
     /**
      * PopulationCreated constructor.

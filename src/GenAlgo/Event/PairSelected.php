@@ -9,8 +9,8 @@ use Common\AbstractDataObject;
 class PairSelected extends AbstractDataObject
 {
 
-    private $spez1;
-    private $spez2;
+    protected $spez1;
+    protected $spez2;
 
     /**
      * PairSelected constructor.

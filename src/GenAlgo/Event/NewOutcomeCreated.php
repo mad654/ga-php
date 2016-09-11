@@ -11,7 +11,7 @@ class NewOutcomeCreated extends AbstractDataObject
     /**
      * @var mixed
      */
-    private $outcome;
+    protected $outcome;
 
     /**
      * NewOutcomeCreated constructor.
