@@ -115,8 +115,10 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
      */
     public function handleSingleTestFinished(SingleTestFinished $e)
     {
-        $output = array_merge($e->getEnvironment()->toArray(), $e->getResult()->toArray());
-        echo implode(' ', $output) . PHP_EOL;
+        $this->logger->info('SingleTestFinished', [
+            'result' => $e->getResult()->toArray(),
+            'env' => $e->getEnvironment()->toArray()
+        ]);
     }
 
     /**
