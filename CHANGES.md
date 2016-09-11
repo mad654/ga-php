@@ -12,7 +12,7 @@
 - install composer localy during `make`
 - Make algo parameters configure able via
   - configuration file in `etc/config`
-  - system envirnment variables
+  - system environment variables
 
 - Integrated SimpleDemo as a command
 
