@@ -4,15 +4,15 @@
 namespace Common;
 
 
-class SampleDataObject
+class SampleImmutableDataObject
 {
-    use DataObjectTrait;
+    use ImmutableDataObjectTrait;
 
     public $firstname;
     public $lastname;
 
     /**
-     * SampleDataObject constructor.
+     * SampleImmutableDataObject constructor.
      * @param $firstname
      * @param $lastname
      */

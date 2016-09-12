@@ -2,10 +2,10 @@
 
 namespace Common;
 
-require_once __DIR__ . '/SampleDataObject.php';
-require_once __DIR__ . '/SampleDataObjectWithPrivateMembers.php';
+require_once __DIR__ . '/SampleImmutableDataObject.php';
+require_once __DIR__ . '/SampleImmutableDataObjectWithPrivateMembers.php';
 
-class DataObjectTraitTest extends \PHPUnit_Framework_TestCase
+class ImmutableObjectTraitTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
@@ -16,7 +16,7 @@ class DataObjectTraitTest extends \PHPUnit_Framework_TestCase
             'lastname' => 'sobb'
         ];
 
-        $dto = new SampleDataObject('hugo', 'sobb');
+        $dto = new SampleImmutableDataObject('hugo', 'sobb');
 
         $this->assertSame('hugo', $dto->firstname);
         $this->assertSame('sobb', $dto->lastname);
@@ -30,7 +30,7 @@ class DataObjectTraitTest extends \PHPUnit_Framework_TestCase
      * @todo add custom exception
      */
     public function shouldThrowExceptionOnWriteAccess() {
-        $dto = new SampleDataObject('hugo', 'sobb');
+        $dto = new SampleImmutableDataObject('hugo', 'sobb');
         $dto->lastname = 'anders';
     }
 
@@ -42,7 +42,7 @@ class DataObjectTraitTest extends \PHPUnit_Framework_TestCase
             'TODO: find a solution for trait only modifies public members without reflection'
         );
 
-        $dto = new SampleDataObjectWithPrivateMembers('','');
+        $dto = new SampleImmutableImmutableDataObjectWithPrivateMembers('','');
         $dto->updatePrivateMember();
 
         $this->assertSame('WAS_CHANGED', $dto->getPrivateMemberData());
@@ -52,7 +52,7 @@ class DataObjectTraitTest extends \PHPUnit_Framework_TestCase
      * @test
      */
     public function privateMembersShouldStayPrivate() {
-        $dto = new SampleDataObjectWithPrivateMembers('','');
+        $dto = new SampleImmutableImmutableDataObjectWithPrivateMembers('','');
         $this->assertSame('INITIAL_STATE', $dto->privateMember, 'This should not be possible');
 
         $this->markTestIncomplete(

@@ -4,9 +4,9 @@
 namespace Common;
 
 
-class SampleDataObjectWithPrivateMembers extends SampleDataObject
+class SampleImmutableImmutableDataObjectWithPrivateMembers extends SampleImmutableDataObject
 {
-    use DataObjectTrait;
+    use ImmutableDataObjectTrait;
 
     private $privateMember = 'INITIAL_STATE';
 

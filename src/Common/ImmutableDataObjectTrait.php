@@ -8,7 +8,7 @@ namespace Common;
  * Attention: Currently this trait will expose all members as public,
  * because we don't want to use reflection.
  *
- * @see DataObjectTraitTest
+ * @see ImmutableDataObjectTrait
  *
  * Defines members of used class as readonly.
  *
@@ -25,10 +25,10 @@ namespace Common;
  * reflection are welcome!
  *
  */
-trait DataObjectTrait
+trait ImmutableDataObjectTrait
 {
 
-    private $__data_object_trait_data = [];
+    private $__immutable_data_object_trait_data = [];
 
     /**
      * @param array $configData
@@ -38,11 +38,11 @@ trait DataObjectTrait
     {
         // unset all members so magic __set comes into play
         foreach ($this as $property => $value) {
-            if ($property == '__data_object_trait_data') {
+            if ($property == '__immutable_data_object_trait_data') {
                 continue;
             }
 
-            $this->__data_object_trait_data[$property] = $value;
+            $this->__immutable_data_object_trait_data[$property] = $value;
 
             unset($this->$property);
         }
@@ -53,12 +53,12 @@ trait DataObjectTrait
      */
     public function toArray()
     {
-        return $this->__data_object_trait_data;
+        return $this->__immutable_data_object_trait_data;
     }
 
     function __get($name)
     {
-        return $this->__data_object_trait_data[$name];
+        return $this->__immutable_data_object_trait_data[$name];
     }
 
 
