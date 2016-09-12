@@ -8,16 +8,36 @@ namespace Common;
  * Attention: Currently this trait will expose all members as public,
  * because we don't want to use reflection.
  *
- * @see ImmutableDataObjectTrait
- *
  * Defines members of used class as readonly.
  *
+ * usage:
+ *
+ * <code>
+ *
+ * class PersonDto {
+ *   use ImmutableDataObjectTrait;
+ *
+ *   public name = 'UNKNOWN';
+ *
+ *   public function __construct($name) {
+ *     $this->name = $name;
+ *     $this->freeze;
+ *   }
+ * }
+ *
+ * $max = new PersonDto('Max Mustermann');
+ * echo $max->name; // Max Mustermann
+ * $max->name = 'Erwin Anders' // throws Exception
+ *
+ * </code>
+ *
+ * @see ImmutableDataObjectTraitTest
+ *
  * This works so far but has the drawback, that all
- * private and protected members are effected to and
- * exposed as public.
+ * private and protected members are exposed as public, too.
  *
  * This could easily be solved by reflection, but will cost
- * more performance I think. In the scope of this project
+ * more performance, I think. In the scope of this project
  * we will create a lot of this data objects, which will
  * have no private members.
  *
@@ -29,6 +49,16 @@ trait ImmutableDataObjectTrait
 {
 
     private $__immutable_data_object_trait_data = [];
+
+    /**
+     * ImmutableDataObjectTrait constructor.
+     */
+    public function __construct()
+    {
+        // avoid accidentally usage as normal, writable object
+        $this->freeze();
+    }
+
 
     /**
      * @param array $configData
