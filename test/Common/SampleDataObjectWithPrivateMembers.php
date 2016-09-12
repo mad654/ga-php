@@ -7,7 +7,7 @@ namespace Common;
 class SampleDataObjectWithPrivateMembers extends SampleDataObject
 {
     use DataObjectTrait;
-    
+
     private $privateMember = 'INITIAL_STATE';
 
     /**

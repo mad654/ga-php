@@ -28,42 +28,24 @@ namespace Common;
 trait DataObjectTrait
 {
 
-    private $__data = [];
+    private $__data_object_trait_data = [];
 
     /**
      * @param array $configData
      * @return static
      */
-    public static function fromArray($configData)
+    public function freeze()
     {
-        $result = new static();
-        $updated = [];
-
-        // save current values for later
-        foreach ($configData as $key => $value) {
-            if (!property_exists($result, $key)) {
-                throw new \InvalidArgumentException("Undefined property: $key");
-            }
-            $result->__data[$key] = $value;
-            array_push($updated, $result);
-        }
-
         // unset all members so magic __set comes into play
-        foreach ($result as $property => $value) {
-            if ($property == '__data') {
+        foreach ($this as $property => $value) {
+            if ($property == '__data_object_trait_data') {
                 continue;
             }
 
-            if (!array_key_exists($property, $result->__data)) {
-                // Store private, protected values too, so we don't loose
-                // any data
-                $result->__data[$property] = $value;
-            }
+            $this->__data_object_trait_data[$property] = $value;
 
-            unset($result->$property);
+            unset($this->$property);
         }
-
-        return $result;
     }
 
     /**
@@ -71,12 +53,12 @@ trait DataObjectTrait
      */
     public function toArray()
     {
-        return $this->__data;
+        return $this->__data_object_trait_data;
     }
 
     function __get($name)
     {
-        return $this->__data[$name];
+        return $this->__data_object_trait_data[$name];
     }
 
 

@@ -6,6 +6,8 @@ namespace GenAlgo\Event;
 
 use Common\AbstractDataObject;
 
+// TODO:mad654 use ReadonlyDataObjectTrait
+
 class NewOutcomeCreated extends AbstractDataObject
 {
     /**
