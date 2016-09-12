@@ -27,7 +27,7 @@ namespace Common;
  *
  * $max = new PersonDto('Max Mustermann');
  * echo $max->name; // Max Mustermann
- * $max->name = 'Erwin Anders' // throws Exception
+ * $max->name = 'Erwin Anders' // throws DomainException
  *
  * </code>
  *
@@ -94,7 +94,9 @@ trait ImmutableDataObjectTrait
 
     function __set($name, $value)
     {
-        throw new \Exception("Access violation: readonly property: $name");
+        throw new \DomainException(
+            "ImmutableDataObjectTrait >> Access violation: tried to change readonly property on : $name"
+        );
     }
 
 

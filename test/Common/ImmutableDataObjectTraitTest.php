@@ -5,7 +5,7 @@ namespace Common;
 require_once __DIR__ . '/SampleImmutableDataObject.php';
 require_once __DIR__ . '/SampleImmutableDataObjectWithPrivateMembers.php';
 
-class ImmutableObjectTraitTest extends \PHPUnit_Framework_TestCase
+class ImmutableDataObjectTraitTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
@@ -25,7 +25,8 @@ class ImmutableObjectTraitTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException \Exception
+     * @expectedException \DomainException
+     * @expectedExceptionMessage ImmutableDataObjectTrait >> Access violation: tried to change readonly property on : lastname
      *
      * @todo add custom exception
      */
