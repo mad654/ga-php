@@ -92,7 +92,7 @@ class SimpleAlgorithm implements AlgorithmInterface
         // todo: mann: test optimal parameters
         // todo: mann: are optimal parameters generic or problem related?
         $code = new SimpleCode(self::CODE);
-        $population = $this->initPopulation($code, $c->PopulationSize(), self::CHROMOSOME_LENGTH);
+        $population = $this->initPopulation($code, $c->populationSize, self::CHROMOSOME_LENGTH);
         $this->notify(new PopulationCreated(1, $population), 'handlePopulationCreated');
 
         $counter = 1;
@@ -109,7 +109,7 @@ class SimpleAlgorithm implements AlgorithmInterface
             $counter++;
             $population = $new;
 
-            if ($counter >= $c->MaxPopulations()) {
+            if ($counter >= $c->maxPopulations) {
                 return $result->populationTimedOut($population, $counter);
             }
 
@@ -339,8 +339,8 @@ class SimpleAlgorithm implements AlgorithmInterface
             $spez2 = $this->selectSpez($population);
             $this->notify(new SpezSelected($spez2), 'handleSpezSelected');
 
-            if ($counter >= $c->MaxSelectionAttempts()) {
-                throw new SelectionException($c->MaxSelectionAttempts(), $population);
+            if ($counter >= $c->maxSelectionAttempts) {
+                throw new SelectionException($c->maxSelectionAttempts, $population);
             }
             $counter++;
         }
@@ -387,7 +387,7 @@ class SimpleAlgorithm implements AlgorithmInterface
         $child2 = '';
 
         // recombination
-        if ($random <= $c->CrossoverRate()) {
+        if ($random <= $c->crossoverRate) {
             // @todo mann: verify performance if recombinationPoint got new random number
             $length = array_sum(count_chars($spez1));
             $recombinationPoint = intval($length * $random);
@@ -398,8 +398,8 @@ class SimpleAlgorithm implements AlgorithmInterface
         }
 
         // mutation: without we find the result in the first generation or nevert (local maximum???)
-        $child1 = $this->mutate($child1, $c->MutationRate());
-        $child2 = $this->mutate($child2, $c->MutationRate());
+        $child1 = $this->mutate($child1, $c->mutationRate);
+        $child2 = $this->mutate($child2, $c->mutationRate);
 
         return [$child1, $child2];
     }

@@ -126,7 +126,7 @@ class ComputationResultTest extends \PHPUnit_Framework_TestCase
      */
     private function createSut()
     {
-        $request = ComputationRequest::from(1, 1, 1, ConfigurationValues::fromArray([]));
+        $request = ComputationRequest::from(1, 1, 1, new ConfigurationValues());
         $result = new ComputationResult($request);
 
         return $result;

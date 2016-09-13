@@ -4,13 +4,30 @@
 namespace GenAlgo\ComputationData;
 
 
-use Common\AbstractDataObject;
+use Common\ArrayAble;
+use Common\ImmutableDataObjectTrait;
 
-class ComputationEnvironment extends AbstractDataObject
+class ComputationEnvironment implements ArrayAble
 {
-    protected $computationUuid;
-    protected $hostname;
-    protected $gitCommitHash;
+    use ImmutableDataObjectTrait;
 
-    protected function __construct() { }
+    public $computationUuid;
+    public $hostname;
+    public $gitCommitHash;
+
+    /**
+     * ComputationEnvironment constructor.
+     * @param string $computationUuid
+     * @param string $hostname
+     * @param string $gitCommitHash
+     */
+    public function __construct($computationUuid, $hostname, $gitCommitHash)
+    {
+        $this->computationUuid = $computationUuid;
+        $this->hostname = $hostname;
+        $this->gitCommitHash = $gitCommitHash;
+        $this->freeze();
+    }
+
+
 }

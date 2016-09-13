@@ -15,7 +15,7 @@ class ComputationRequestTest extends \PHPUnit_Framework_TestCase
             100,
             1,
             10,
-            ConfigurationValues::fromArray([])
+            new ConfigurationValues()
         );
 
         $this->assertEquals([

@@ -4,60 +4,45 @@
 namespace GenAlgo;
 
 
-use Common\AbstractDataObject;
+use Common\ArrayAble;
+use Common\ImmutableDataObjectTrait;
 
 
-class ConfigurationValues extends AbstractDataObject
+class ConfigurationValues implements ArrayAble
 {
-    protected $maxPopulations = 100;
-    protected $populationSize = 100;
+    use ImmutableDataObjectTrait;
 
-    protected $crossoverRate = 0.7;
-    protected $mutationRate = 0.001;
-    protected $maxSelectionAttempts = 10000;
+    public $maxPopulations;
+    public $populationSize;
 
-    protected function __construct() {
-
-    }
+    public $crossoverRate;
+    public $mutationRate;
+    public $maxSelectionAttempts;
 
     /**
-     * @return int
+     * ConfigurationValues constructor.
+     *
+     * @param int $maxPopulations
+     * @param int $populationSize
+     * @param float $crossoverRate
+     * @param float $mutationRate
+     * @param int $maxSelectionAttempts
      */
-    public function MaxPopulations()
-    {
-        return $this->maxPopulations;
+    public function __construct(
+        $maxPopulations = 100,
+        $populationSize = 100,
+        $crossoverRate = 0.7,
+        $mutationRate = 0.001,
+        $maxSelectionAttempts = 10000
+    ) {
+        $this->maxPopulations = $maxPopulations;
+        $this->populationSize = $populationSize;
+        $this->crossoverRate = $crossoverRate;
+        $this->mutationRate = $mutationRate;
+        $this->maxSelectionAttempts = $maxSelectionAttempts;
+
+        $this->freeze();
     }
 
-    /**
-     * @return int
-     */
-    public function PopulationSize()
-    {
-        return $this->populationSize;
-    }
-
-    /**
-     * @return float
-     */
-    public function CrossoverRate()
-    {
-        return $this->crossoverRate;
-    }
-
-    /**
-     * @return float
-     */
-    public function MutationRate()
-    {
-        return $this->mutationRate;
-    }
-
-    /**
-     * @return int
-     */
-    public function MaxSelectionAttempts()
-    {
-        return $this->maxSelectionAttempts;
-    }
 
 }

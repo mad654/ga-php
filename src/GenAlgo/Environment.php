@@ -27,23 +27,13 @@ class Environment
      */
     public static function getEvolutionParameters()
     {
-        $keys = [
-            'MAX_POPULATIONS'        => 'maxPopulations',
-            'POPULATION_SIZE'        => 'populationSize',
-            'CROSSOVER_RATE'         => 'crossoverRate',
-            'MUTATION_RATE'          => 'mutationRate',
-            'MAX_SELECTION_ATTEMPTS' => 'maxSelectionAttempts',
-        ];
-
-        $result = [];
-
-        foreach ($keys as $envKey => $configKey) {
-            if (!is_null(self::get($envKey))) {
-                $result[$configKey] = self::get($envKey);
-            }
-        }
-
-        return ConfigurationValues::fromArray($result);
+        return new ConfigurationValues(
+            self::get('MAX_POPULATIONS', 100),
+            self::get('POPULATION_SIZE', 100),
+            self::get('CROSSOVER_RATE', 0.7),
+            self::get('MUTATION_RATE', 0.001),
+            self::get('MAX_SELECTION_ATTEMPTS', 10000)
+        );
     }
 
     public static function getTargetNumber()
@@ -85,11 +75,11 @@ class Environment
      * @return ComputationEnvironment
      */
     public static function getComputationEnvironment() {
-        return ComputationEnvironment::fromArray([
-            'computationUuid' => self::getNewUuid(),
-            'hostname' => self::getHostname(),
-            'gitCommitHash' => self::getCurrentCommitHash(),
-        ]);
+        return new ComputationEnvironment(
+            self::getNewUuid(),
+            self::getHostname(),
+            self::getCurrentCommitHash()
+        );
     }
 
     /**
