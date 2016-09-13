@@ -4,16 +4,16 @@
 namespace GenAlgo\Event;
 
 
-use Common\AbstractDataObject;
+use Common\ArrayAble;
+use Common\ImmutableDataObjectTrait;
 
 // TODO:mad654 use ReadonlyDataObjectTrait
 
-class NewOutcomeCreated extends AbstractDataObject
+class NewOutcomeCreated implements ArrayAble
 {
-    /**
-     * @var mixed
-     */
-    protected $outcome;
+    use ImmutableDataObjectTrait;
+
+    public $outcome;
 
     /**
      * NewOutcomeCreated constructor.
@@ -22,14 +22,6 @@ class NewOutcomeCreated extends AbstractDataObject
     public function __construct($outcome)
     {
         $this->outcome = $outcome;
+        $this->freeze();
     }
-
-    /**
-     * @return mixed
-     */
-    public function getOutcome()
-    {
-        return $this->outcome;
-    }
-
 }

@@ -4,18 +4,22 @@
 namespace GenAlgo\Event;
 
 
-class PopulationFitnessCalculated extends PairSelected
+use Common\ArrayAble;
+use Common\ImmutableDataObjectTrait;
+
+class PopulationFitnessCalculated implements ArrayAble
 {
+    use ImmutableDataObjectTrait;
 
     /**
      * @var float
      */
-    protected $avgPopulationFitness;
+    public $avgPopulationFitness;
 
     /**
      * @var array;
      */
-    protected $fitnessDetails;
+    public $fitnessDetails;
 
     /**
      * PopulationFitnessCalculated constructor.
@@ -26,23 +30,6 @@ class PopulationFitnessCalculated extends PairSelected
     {
         $this->avgPopulationFitness = $avgPopulationFitness;
         $this->fitnessDetails = $fitnessDetails;
+        $this->freeze();
     }
-
-    /**
-     * @return float
-     */
-    public function getAvgPopulationFitness()
-    {
-        return $this->avgPopulationFitness;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFitnessDetails()
-    {
-        return $this->fitnessDetails;
-    }
-
-
 }

@@ -4,19 +4,22 @@
 namespace GenAlgo\Event;
 
 
-use Common\AbstractDataObject;
+use Common\ArrayAble;
+use Common\ImmutableDataObjectTrait;
 
-class PopulationCreated extends AbstractDataObject
+class PopulationCreated implements ArrayAble
 {
+    use ImmutableDataObjectTrait;
+
     /**
      * @var int
      */
-    protected $generation;
+    public $generation;
 
     /**
      * @var array
      */
-    protected $population;
+    public $population;
 
     /**
      * PopulationCreated constructor.
@@ -27,23 +30,6 @@ class PopulationCreated extends AbstractDataObject
     {
         $this->generation = $generation;
         $this->population = $population;
+        $this->freeze();
     }
-
-    /**
-     * @return int
-     */
-    public function getGeneration()
-    {
-        return $this->generation;
-    }
-
-    /**
-     * @return array
-     */
-    public function getPopulation()
-    {
-        return $this->population;
-    }
-
-
 }

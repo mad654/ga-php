@@ -4,20 +4,24 @@
 namespace GenAlgo\Event;
 
 
+use Common\ArrayAble;
+use Common\ImmutableDataObjectTrait;
 use GenAlgo\ComputationData\ComputationEnvironment;
 use GenAlgo\ComputationData\ComputationResult;
 
-class SingleTestFinished
+class SingleTestFinished implements ArrayAble
 {
+    use ImmutableDataObjectTrait;
+
     /**
      * @var ComputationResult
      */
-    private $result;
+    public $result;
 
     /**
      * @var ComputationEnvironment
      */
-    private $environment;
+    public $environment;
 
     /**
      * SingleTestFinished constructor.
@@ -28,22 +32,6 @@ class SingleTestFinished
     {
         $this->result = $result;
         $this->environment = $environment;
+        $this->freeze();
     }
-
-    /**
-     * @return ComputationResult
-     */
-    public function getResult()
-    {
-        return $this->result;
-    }
-
-    /**
-     * @return ComputationEnvironment
-     */
-    public function getEnvironment()
-    {
-        return $this->environment;
-    }
-
 }

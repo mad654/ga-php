@@ -4,14 +4,14 @@
 namespace GenAlgo\Event;
 
 
-use Common\AbstractDataObject;
+use Common\ArrayAble;
+use Common\ImmutableDataObjectTrait;
 
-class SpezSelected extends AbstractDataObject
+class SpezSelected implements ArrayAble
 {
-    /**
-     * @var mixed
-     */
-    protected $spez;
+    use ImmutableDataObjectTrait;
+
+    public $spez;
 
     /**
      * SpezSelected constructor.
@@ -20,14 +20,7 @@ class SpezSelected extends AbstractDataObject
     public function __construct($spez)
     {
         $this->spez = $spez;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSpez()
-    {
-        return $this->spez;
+        $this->freeze();
     }
 
 }

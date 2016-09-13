@@ -110,7 +110,7 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
      */
     public function handleRunStarted(RunStartedEvent $e)
     {
-        $this->currentEnvironment = $e->getEnvironment();
+        $this->currentEnvironment = $e->environment;
         $this->logger->info('RunStartedEvent', ['env' => $this->currentEnvironment->toArray() ]);
     }
 
@@ -119,7 +119,7 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
      */
     public function handleSingleTestStarted(SingleTestStarted $e)
     {
-        $this->logger->info('SingleTestStarted', ['env' => $this->currentEnvironment->toArray() ]);
+        $this->logger->info('SingleTestStarted', ['env' => $e->environment->toArray() ]);
     }
 
     /**
@@ -128,8 +128,8 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
     public function handleSingleTestFinished(SingleTestFinished $e)
     {
         $this->logger->info('SingleTestFinished', [
-            'result' => $e->getResult()->toArray(),
-            'env' => $e->getEnvironment()->toArray()
+            'result' => $e->result->toArray(),
+            'env' => $e->environment->toArray()
         ]);
     }
 

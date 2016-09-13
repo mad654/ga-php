@@ -4,21 +4,24 @@
 namespace GenAlgo\Event;
 
 
+use Common\ArrayAble;
+use Common\ImmutableDataObjectTrait;
 use GenAlgo\ComputationData\ComputationEnvironment;
 use GenAlgo\ComputationData\ComputationRequest;
 
-class SingleTestStarted
+class SingleTestStarted implements ArrayAble
 {
+    use ImmutableDataObjectTrait;
 
     /**
      * @var ComputationRequest
      */
-    private $request;
+    public $request;
 
     /**
      * @var ComputationEnvironment
      */
-    private $environment;
+    public $environment;
 
     /**
      * SingleTestStarted constructor.
@@ -29,21 +32,6 @@ class SingleTestStarted
     {
         $this->request = $request;
         $this->environment = $environment;
-    }
-
-    /**
-     * @return ComputationRequest
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEnvironment()
-    {
-        return $this->environment;
+        $this->freeze();
     }
 }

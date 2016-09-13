@@ -4,13 +4,15 @@
 namespace GenAlgo\Event;
 
 
-use Common\AbstractDataObject;
+use Common\ArrayAble;
+use Common\ImmutableDataObjectTrait;
 
-class PairSelected extends AbstractDataObject
+class PairSelected implements ArrayAble
 {
+    use ImmutableDataObjectTrait;
 
-    protected $spez1;
-    protected $spez2;
+    public $spez1;
+    public $spez2;
 
     /**
      * PairSelected constructor.
@@ -21,22 +23,6 @@ class PairSelected extends AbstractDataObject
     {
         $this->spez1 = $spez1;
         $this->spez2 = $spez2;
+        $this->freeze();
     }
-
-    /**
-     * @return mixed
-     */
-    public function getSpez1()
-    {
-        return $this->spez1;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSpez2()
-    {
-        return $this->spez2;
-    }
-
 }

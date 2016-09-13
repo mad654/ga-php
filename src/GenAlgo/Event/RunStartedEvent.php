@@ -4,11 +4,18 @@
 namespace GenAlgo\Event;
 
 
+use Common\ArrayAble;
+use Common\ImmutableDataObjectTrait;
 use GenAlgo\ComputationData\ComputationEnvironment;
 
-class RunStartedEvent
+class RunStartedEvent implements ArrayAble
 {
-    private $environment;
+    use ImmutableDataObjectTrait;
+
+    /**
+     * @var ComputationEnvironment
+     */
+    public $environment;
 
     /**
      * RunStartedEvent constructor.
@@ -17,13 +24,6 @@ class RunStartedEvent
     public function __construct(ComputationEnvironment $environment)
     {
         $this->environment = $environment;
-    }
-
-    /**
-     * @return ComputationEnvironment
-     */
-    public function getEnvironment()
-    {
-        return $this->environment;
+        $this->freeze();
     }
 }
