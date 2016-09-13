@@ -114,3 +114,8 @@ tail -f var/cache/debug.log | grep GENALGO.TUTORIAL.DEBUG
    - group log entries
    - calc min/max/avg
    - draw charts
+
+### TODOS feature/mad654/emit-events
+- logger seems to keep reference for all logged data -> MemoryLeak
+- Add tests for AlgorithmTestRunner
+- Make ComputationRequest ImmutableDataObject
