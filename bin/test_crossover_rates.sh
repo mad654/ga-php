@@ -1,6 +1,8 @@
 #!/bin/bash
 
-function calc() { awk "BEGIN { print "$*" }" }
+function calc() { 
+	awk "BEGIN { print "$*" }" 
+}
 
 # test from 0.0009 bis 0.9 > Faktor 10000 > 9 - 9000
 for ACT in {9..9000}
