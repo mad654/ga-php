@@ -3,7 +3,7 @@ test: build
 
 run: test
 	@bin/app gen-algo:tutorial -vvv
-	
+
 build: vendor etc/config
 
 	vendor/bin/phpunit -c test/phpunit.xml
@@ -28,3 +28,6 @@ etc/config: etc/config.example
 clean:
 	rm -rv vendor
 	rm -rv bin/composer
+
+fetch-system-debs:
+	sudo apt-get install php-cli php-xml parallel

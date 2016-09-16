@@ -37,18 +37,6 @@ $logger->pushHandler(new \Monolog\Handler\FingersCrossedHandler(
     getenv('APP_LOG_BUFFER')
 ));
 
-// Development
-$logger->pushHandler(
-    (
-    new \Monolog\Handler\RotatingFileHandler(
-        "$logDir/$logFileName.debug.json",
-        0,
-        \Monolog\Logger::DEBUG,
-        $bubble = true
-    )
-    )->setFormatter(new \Monolog\Formatter\JsonFormatter())
-);
-
 $logger->pushProcessor(new PsrLogMessageProcessor());
 $logger->pushProcessor(new ProcessIdProcessor());
 $logger->pushProcessor(new MemoryUsageProcessor());
