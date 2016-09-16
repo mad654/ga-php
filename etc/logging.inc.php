@@ -18,16 +18,18 @@ $logger->useMicrosecondTimestamps(true);
 // Development + Production
 $resultLogger = $logger->withName($logger->getName() . '.RESULTS');
 $resultLogger->pushHandler(
-    (new \Monolog\Handler\StreamHandler(
+    (new \Monolog\Handler\RotatingFileHandler(
         "$logDir/$logFileName.result.json",
+        0,
         \Monolog\Logger::INFO,
         $bubble = false
     ))->setFormatter(new \Monolog\Formatter\JsonFormatter())
 );
 
 $logger->pushHandler(new \Monolog\Handler\FingersCrossedHandler(
-    new \Monolog\Handler\StreamHandler(
+    new \Monolog\Handler\RotatingFileHandler(
         "$logDir/$logFileName.error.log",
+        0,
         \Monolog\Logger::DEBUG,
         $bubble = true
     ),
@@ -38,8 +40,9 @@ $logger->pushHandler(new \Monolog\Handler\FingersCrossedHandler(
 // Development
 $logger->pushHandler(
     (
-    new \Monolog\Handler\StreamHandler(
+    new \Monolog\Handler\RotatingFileHandler(
         "$logDir/$logFileName.debug.json",
+        0,
         \Monolog\Logger::DEBUG,
         $bubble = true
     )
