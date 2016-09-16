@@ -2,7 +2,7 @@
 test: build
 
 run: test
-	@bin/app gen-algo:tutorial
+	@bin/app gen-algo:tutorial -vvv
 	
 build: vendor etc/config
 

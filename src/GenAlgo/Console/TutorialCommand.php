@@ -21,6 +21,7 @@ use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use GenAlgo\SimpleAlgorithm;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -40,7 +41,12 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
     /**
      * @var SymfonyStyle
      */
-    private $io;
+    private $ui;
+
+    /**
+     * @var ProgressBar
+     */
+    private $progressBar;
 
     /**
      * @var ComputationEnvironment
@@ -69,8 +75,8 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->io = new SymfonyStyle($input, $output);
-
+        $this->ui = new SymfonyStyle($input, $output);
+        $this->progressBar = $this->ui->createProgressBar();
         ini_set('memory_limit', Environment::getAppMemoryLimit());
         $this->runSimpleDemo();
     }
@@ -104,6 +110,26 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
      */
     private function runSimpleDemo()
     {
+        $runner = $this->createRunner();
+        $target = Environment::getTargetNumber();
+        $testCount = Environment::getTestCount();
+        $evolutionParameters = Environment::getEvolutionParameters()->toArray();
+
+        $this->ui->title("Running computation tests to find {$target}");
+        $this->ui->table(array_keys($evolutionParameters), [$evolutionParameters]);
+        $this->progressBar->start($testCount);
+
+        $runner->run($target, $testCount);
+
+        $this->progressBar->finish();
+        $this->ui->newLine(2);
+        $this->ui->success("... DONE");
+    }
+
+    /**
+     * @return AlgorithmTestRunner
+     */
+    private function createRunner() {
         $runner = new AlgorithmTestRunner(
             new SimpleAlgorithm(),
             Environment::getComputationEnvironment(),
@@ -111,7 +137,7 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
         );
 
         $runner->addEventListener($this);
-        $runner->run(Environment::getTargetNumber(), Environment::getTestCount());
+        return $runner;
     }
 
     /**
@@ -144,6 +170,8 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
         $this->logger->info('SingleTestFinished', [
             'env' => $e->environment->toArray()
         ]);
+
+        $this->progressBar->advance();
     }
 
     /**
