@@ -15,18 +15,16 @@ use Monolog\Processor\PsrLogMessageProcessor;
 
 $logger->useMicrosecondTimestamps(true);
 
-// Development
-$logger->pushHandler(
-    (
-        new \Monolog\Handler\StreamHandler(
-            "$logDir/$logFileName.debug.json",
-            \Monolog\Logger::DEBUG,
-            $bubble = true
-        )
-    )->setFormatter(new \Monolog\Formatter\JsonFormatter())
+// Development + Production
+$resultLogger = $logger->withName($logger->getName() . '.RESULTS');
+$resultLogger->pushHandler(
+    (new \Monolog\Handler\StreamHandler(
+        "$logDir/$logFileName.result.json",
+        \Monolog\Logger::INFO,
+        $bubble = false
+    ))->setFormatter(new \Monolog\Formatter\JsonFormatter())
 );
 
-// Development + Production
 $logger->pushHandler(new \Monolog\Handler\FingersCrossedHandler(
     new \Monolog\Handler\StreamHandler(
         "$logDir/$logFileName.error.log",
@@ -37,7 +35,23 @@ $logger->pushHandler(new \Monolog\Handler\FingersCrossedHandler(
     getenv('APP_LOG_BUFFER')
 ));
 
+// Development
+$logger->pushHandler(
+    (
+    new \Monolog\Handler\StreamHandler(
+        "$logDir/$logFileName.debug.json",
+        \Monolog\Logger::DEBUG,
+        $bubble = true
+    )
+    )->setFormatter(new \Monolog\Formatter\JsonFormatter())
+);
+
 $logger->pushProcessor(new PsrLogMessageProcessor());
 $logger->pushProcessor(new ProcessIdProcessor());
 $logger->pushProcessor(new MemoryUsageProcessor());
 $logger->pushProcessor(new MemoryPeakUsageProcessor());
+
+return [
+    'default' => $logger,
+    'result' => $resultLogger
+];
