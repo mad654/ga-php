@@ -17,6 +17,7 @@ use GenAlgo\Event\RunStartedEvent;
 use GenAlgo\Event\SingleTestFinished;
 use GenAlgo\Event\SingleTestStarted;
 use GenAlgo\Event\SpezSelected;
+use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use GenAlgo\SimpleAlgorithm;
 use Symfony\Component\Console\Command\Command;
@@ -26,6 +27,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class TutorialCommand extends Command implements AlgorithmTestRunner\EventListenerInterface
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $resultLogger;
+
     /**
      * @var LoggerInterface
      */
@@ -43,10 +49,13 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
 
     /**
      * TutorialCommand constructor.
+     * @param LoggerInterface $resultLogger Used to log results
+     * @param LoggerInterface $logger Used to log all over events
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $resultLogger, LoggerInterface $logger)
     {
         parent::__construct();
+        $this->resultLogger = $resultLogger;
         $this->logger = $logger;
     }
 
@@ -127,8 +136,12 @@ class TutorialCommand extends Command implements AlgorithmTestRunner\EventListen
      */
     public function handleSingleTestFinished(SingleTestFinished $e)
     {
-        $this->logger->info('SingleTestFinished', [
+        $this->resultLogger->info('SingleTestFinished', [
             'result' => $e->result->toArray(),
+            'env' => $e->environment->toArray()
+        ]);
+
+        $this->logger->info('SingleTestFinished', [
             'env' => $e->environment->toArray()
         ]);
     }

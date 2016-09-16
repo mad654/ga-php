@@ -16,11 +16,15 @@ use Monolog\Processor\PsrLogMessageProcessor;
 $logger->useMicrosecondTimestamps(true);
 
 // Development
-$logger->pushHandler(new \Monolog\Handler\StreamHandler(
-    "$logDir/$logFileName.debug.log",
-    \Monolog\Logger::DEBUG,
-    $bubble = true
-));
+$logger->pushHandler(
+    (
+        new \Monolog\Handler\StreamHandler(
+            "$logDir/$logFileName.debug.json",
+            \Monolog\Logger::DEBUG,
+            $bubble = true
+        )
+    )->setFormatter(new \Monolog\Formatter\JsonFormatter())
+);
 
 // Development + Production
 $logger->pushHandler(new \Monolog\Handler\FingersCrossedHandler(
