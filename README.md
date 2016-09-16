@@ -116,12 +116,4 @@ tail -f var/log/genalgo.debug-*.json | grep GENALGO.DEFAULT.TUTORIAL.DEBUG
 - [DONE] add configuration object feature/mad654/configuration
 - [DONE] make file fetches own local composer to bin/composer
 - [DONE] emmit events [start, ok, error] feature/mad654/emit-events
-- Find tool to analyse log entries which can:
-   - group log entries
-   - calc min/max/avg
-   - draw charts
-
-### TODOS feature/mad654/emit-events
-- [DONE] logger seems to keep reference for all logged data -> MemoryLeak
-- Add tests for AlgorithmTestRunner
-- Make ComputationRequest ImmutableDataObject
+- make fitness function configurable
