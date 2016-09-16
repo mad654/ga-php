@@ -15,4 +15,5 @@ export -f run
 export -f calc
 
 # test from 0.000001 bis 0.01 > Faktor 1000000 > 1 - 10000
-parallel -j -2 run ::: {1..10000}
+#parallel -j -2 run ::: {1..10000}
+parallel -j -2 run ::: {10000..1}
