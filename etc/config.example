@@ -15,6 +15,10 @@ APP_LOG_DIR="${APP_VAR_DIR}/log"
 ### is dump to STDOUT
 APP_LOG_LEVEL="DEBUG"
 
+### Finger crossed handler stores log entries in memory buffer
+### so we have to limit it here, in order to avoid a memory leak
+APP_LOG_BUFFER=10000
+
 # Add your application stuff here
 ## !!! HAVE SOME REQUIRED ONE, OR WANT TO FILTER VALUES? !!!
 ## !!! Take a look at `etc/config_requirements.inc.php`  !!!

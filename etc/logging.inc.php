@@ -13,6 +13,8 @@ use Monolog\Processor\PsrLogMessageProcessor;
 /* @var string $logDir */
 /* @var string $logFileName */
 
+$logger->useMicrosecondTimestamps(true);
+
 // Development
 $logger->pushHandler(new \Monolog\Handler\StreamHandler(
     "$logDir/$logFileName.debug.log",
@@ -26,7 +28,9 @@ $logger->pushHandler(new \Monolog\Handler\FingersCrossedHandler(
         "$logDir/$logFileName.error.log",
         \Monolog\Logger::DEBUG,
         $bubble = true
-    )
+    ),
+    null,
+    getenv('APP_LOG_BUFFER')
 ));
 
 $logger->pushProcessor(new PsrLogMessageProcessor());

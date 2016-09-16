@@ -80,7 +80,9 @@ function createConsoleLogger($logName)
     $logger->pushHandler(
         new \Monolog\Handler\FingersCrossedHandler(
             (new \Monolog\Handler\StreamHandler('php://stdout', getenv('APP_LOG_LEVEL')))
-                ->setFormatter(new ColoredLineFormatter(new DefaultScheme()))
+                ->setFormatter(new ColoredLineFormatter(new DefaultScheme())),
+            null,
+            getenv('APP_LOG_BUFFER')
         )
     );
 
