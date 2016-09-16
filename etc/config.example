@@ -3,7 +3,6 @@
 
 # App common stuff
 APP_NAME="GenAlgo"
-APP_SRC_DIR="./src"
 
 ## Logging
 APP_VAR_DIR="./var/"
@@ -15,6 +14,10 @@ APP_LOG_DIR="${APP_VAR_DIR}/log"
 ### if so all log messages for APP_LOG_LEVEL and above
 ### is dump to STDOUT
 APP_LOG_LEVEL="DEBUG"
+
+### Finger crossed handler stores log entries in memory buffer
+### so we have to limit it here, in order to avoid a memory leak
+APP_LOG_BUFFER=10000
 
 # Add your application stuff here
 ## !!! HAVE SOME REQUIRED ONE, OR WANT TO FILTER VALUES? !!!

@@ -4,90 +4,45 @@
 namespace GenAlgo;
 
 
-class ConfigurationValues
+use Common\ArrayAble;
+use Common\ImmutableDataObjectTrait;
+
+
+class ConfigurationValues implements ArrayAble
 {
-    private $maxPopulations = 100;
-    private $populationSize = 100;
+    use ImmutableDataObjectTrait;
 
-    private $crossoverRate = 0.7;
-    private $mutationRate = 0.001;
-    private $maxSelectionAttempts = 10000;
+    public $maxPopulations;
+    public $populationSize;
 
-    private function __construct() {
-
-    }
+    public $crossoverRate;
+    public $mutationRate;
+    public $maxSelectionAttempts;
 
     /**
-     * @param array $configData
-     * @return ConfigurationValues
+     * ConfigurationValues constructor.
+     *
+     * @param int $maxPopulations
+     * @param int $populationSize
+     * @param float $crossoverRate
+     * @param float $mutationRate
+     * @param int $maxSelectionAttempts
      */
-    public static function fromArray($configData)
-    {
-        $result = new ConfigurationValues();
+    public function __construct(
+        $maxPopulations = 100,
+        $populationSize = 100,
+        $crossoverRate = 0.7,
+        $mutationRate = 0.001,
+        $maxSelectionAttempts = 10000
+    ) {
+        $this->maxPopulations = $maxPopulations;
+        $this->populationSize = $populationSize;
+        $this->crossoverRate = $crossoverRate;
+        $this->mutationRate = $mutationRate;
+        $this->maxSelectionAttempts = $maxSelectionAttempts;
 
-        foreach ($configData as $key => $value) {
-            if (!property_exists($result, $key)) {
-                throw new \InvalidArgumentException("Undefined property: $key");
-            }
-
-            $result->$key = $value;
-        }
-
-        return $result;
+        $this->freeze();
     }
 
-    /**
-     * @return array
-     */
-    public function toArray()
-    {
-        $result = [];
-
-        foreach ($this as $key => $value) {
-            $result[$key] = $value;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return int
-     */
-    public function MaxPopulations()
-    {
-        return $this->maxPopulations;
-    }
-
-    /**
-     * @return int
-     */
-    public function PopulationSize()
-    {
-        return $this->populationSize;
-    }
-
-    /**
-     * @return float
-     */
-    public function CrossoverRate()
-    {
-        return $this->crossoverRate;
-    }
-
-    /**
-     * @return float
-     */
-    public function MutationRate()
-    {
-        return $this->mutationRate;
-    }
-
-    /**
-     * @return int
-     */
-    public function MaxSelectionAttempts()
-    {
-        return $this->maxSelectionAttempts;
-    }
 
 }

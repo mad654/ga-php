@@ -24,7 +24,7 @@ bin/app gen-algo:tutorial
 ### How it works and what it does
 
 Implements this [tutorial](http://www.ai-junkie.com/ga/intro/gat1.html)
-See [src/SimpleDemo.php](src/SimpleDemo.php) for details.
+See [src/GenAlgo/SimpleAlgorithm.php](src/GenAlgo/SimpleAlgorithm.php) for details.
 
 ### Required parameters
 
@@ -70,13 +70,58 @@ MAX_SELECTION_ATTEMPTS=10000 \
 bin/app gen-algo:tutorial
 ```
 
+### Events
+
+Currently this events are fired and handled for logging purposes, to give
+you a idea whats going on.
+
+#### Results
+
+You can watch which results were calculated by
+
+```
+tail -f var/log/genalgo.result-*.json
+```
+
+#### AlgorithmTestRunner events
+
+This 4 events represent the current state of test runner.
+
+- [RunStartedEvent](src/GenAlgo/Event/RunStartedEvent.php)
+- [SingleTestStarted](src/GenAlgo/Event/SingleTestStarted.php)
+- [SingleTestFinished](src/GenAlgo/Event/SingleTestFinished.php)
+- [RunFinishedEvent](src/GenAlgo/Event/RunFinishedEvent.php)
+
+```
+tail -f var/log/genalgo.debug-*.json | grep GENALGO.DEFAULT.TUTORIAL.INFO
+```
+
+#### Algorithm events
+
+This events represent the current internal state of the algorithm. So
+if you wan't to take a deeper look, this will be you friend:
+
+```
+tail -f var/log/genalgo.debug-*.json | grep GENALGO.DEFAULT.TUTORIAL.DEBUG
+```
+
+- [NewOutcomeCreated](src/GenAlgo/Event/NewOutcomeCreated.php)
+- [PopulationCreated](src/GenAlgo/Event/PopulationCreated.php)
+- [SpezSelected](src/GenAlgo/Event/SpezSelected.php)
+- [PairSelected](src/GenAlgo/Event/PairSelected.php)
+- [PopulationFitnessCalculated](src/GenAlgo/Event/PopulationFitnessCalculated.php)
+
 ## ROADMAP
 - [DONE] integrate as command
 - [DONE] add configuration object feature/mad654/configuration
 - [DONE] make file fetches own local composer to bin/composer
-- [PROGRESS] emmit events [start, ok, error] feature/mad654/emit-events
+- [DONE] emmit events [start, ok, error] feature/mad654/emit-events
 - Find tool to analyse log entries which can:
    - group log entries
    - calc min/max/avg
    - draw charts
-   
+
+### TODOS feature/mad654/emit-events
+- [DONE] logger seems to keep reference for all logged data -> MemoryLeak
+- Add tests for AlgorithmTestRunner
+- Make ComputationRequest ImmutableDataObject

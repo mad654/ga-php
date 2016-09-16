@@ -14,11 +14,11 @@ use Symfony\Component\Console\Application;
 function main($root) {
     configureRequiredEnv($root);
     $appName = getenv('APP_NAME');
-    $logger = configureLogging($root, $appName);
+    $loggers = configureLogging($root, $appName);
 
     $app = new Application();
     $app->setName($appName);
-    $app->addCommands(getCommands($root, $logger));
+    $app->addCommands(getCommands($root, $loggers));
     $app->run();
 }
 
@@ -28,9 +28,10 @@ function main($root) {
  * and other environment
  *
  * @param string $root root directory
+ * @param LoggerInterface[] $loggers
  * @return \Symfony\Component\Console\Command\Command[]
  */
-function getCommands($root, LoggerInterface $logger) {
+function getCommands($root, $loggers) {
     $commands = include "$root/etc/commands.inc.php";
     return $commands;
 }
@@ -53,7 +54,7 @@ function configureRequiredEnv($root) {
  */
 function configureLogging($root, $name) {
     $logDir = getenv('APP_LOG_DIR');
-    $logName = strtoupper(str_replace(' ', '_', $name));
+    $logName = strtoupper(str_replace(' ', '_', $name)) . '.DEFAULT';
     $logFileName = strtolower(str_replace(' ', '_', $name));
 
     $logger = createConsoleLogger($logName);
@@ -64,10 +65,10 @@ function configureLogging($root, $name) {
     }
 
     $logger->info('Configure logging base on {f}', [ 'f' => "$root/etc/logging.inc.php"]);
-    include "$root/etc/logging.inc.php";
+    $loggers = include "$root/etc/logging.inc.php";
     $logger->info('Logger configured');
 
-    return $logger;
+    return $loggers;
 }
 
 /**
@@ -80,7 +81,9 @@ function createConsoleLogger($logName)
     $logger->pushHandler(
         new \Monolog\Handler\FingersCrossedHandler(
             (new \Monolog\Handler\StreamHandler('php://stdout', getenv('APP_LOG_LEVEL')))
-                ->setFormatter(new ColoredLineFormatter(new DefaultScheme()))
+                ->setFormatter(new ColoredLineFormatter(new DefaultScheme())),
+            null,
+            getenv('APP_LOG_BUFFER')
         )
     );
 
