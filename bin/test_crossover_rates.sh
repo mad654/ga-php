@@ -6,7 +6,7 @@ function calc() {
 
 function run() {
 	RATE=$(calc $1/1000000)
-	echo "Running for number $1 means crossoverRate: $RATE"
+	echo "Finished for number $1 means crossoverRate: $RATE"
 	TARGET_NUMBER=42 TEST_COUNT=100 MUTATION_RATE=0.09375 CROSSOVER_RATE=$RATE bin/app gen-algo:tutorial -q
 }
 

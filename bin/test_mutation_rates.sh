@@ -6,8 +6,10 @@ function calc() {
 }
 
 function run() {
+    echo "Starting factor $1"
+
 	RATE=$(calc $1/1000000)
-	echo "Running for number $1 means mutationRate: $RATE"
+	echo "Finished for number $1 means mutationRate: $RATE"
 	TARGET_NUMBER=42 TEST_COUNT=100 MUTATION_RATE=$RATE bin/app gen-algo:tutorial -q
 }
 
