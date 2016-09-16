@@ -75,6 +75,14 @@ bin/app gen-algo:tutorial
 Currently this events are fired and handled for logging purposes, to give
 you a idea whats going on.
 
+#### Results
+
+You can see which results were calculated by
+
+```
+tail -f var/log/genalgo.result.json
+```
+
 #### AlgorithmTestRunner events
 
 This 4 events represent the current state of test runner.
@@ -84,10 +92,8 @@ This 4 events represent the current state of test runner.
 - [SingleTestFinished](src/GenAlgo/Event/SingleTestFinished.php)
 - [RunFinishedEvent](src/GenAlgo/Event/RunFinishedEvent.php)
 
-You can see which results were calculated by
-
 ```
-tail -f var/cache/debug.log | grep GENALGO.TUTORIAL.INFO
+tail -f var/log/genalgo.debug.json | grep GENALGO.DEFAULT.TUTORIAL.INFO
 ```
 
 #### Algorithm events
@@ -96,7 +102,7 @@ This events represent the current internal state of the algorithm. So
 if you wan't to take a deeper look, this will be you friend:
 
 ```
-tail -f var/cache/debug.log | grep GENALGO.TUTORIAL.DEBUG
+tail -f var/log/genalgo.debug.json | grep GENALGO.DEFAULT.TUTORIAL.DEBUG
 ```
 
 - [NewOutcomeCreated](src/GenAlgo/Event/NewOutcomeCreated.php)
@@ -116,6 +122,6 @@ tail -f var/cache/debug.log | grep GENALGO.TUTORIAL.DEBUG
    - draw charts
 
 ### TODOS feature/mad654/emit-events
-- logger seems to keep reference for all logged data -> MemoryLeak
+- [DONE] logger seems to keep reference for all logged data -> MemoryLeak
 - Add tests for AlgorithmTestRunner
 - Make ComputationRequest ImmutableDataObject
