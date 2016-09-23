@@ -89,4 +89,20 @@ class Environment
     {
         return self::get('APP_MEMORY_LIMIT', '512M');
     }
+
+
+    public static function getLogServerEnabled()
+    {
+        return self::get('APP_LOG_RSYSLOG', false);
+    }
+
+    public static function getLogServerHostName()
+    {
+        return self::get('APP_LOG_HOST', 'localhost');
+    }
+
+    public static function getLogServerPort()
+    {
+        return self::get('APP_LOG_PORT', 514);
+    }
 }

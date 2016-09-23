@@ -9,6 +9,11 @@ APP_VAR_DIR="./var/"
 APP_CACHE_DIR="${APP_VAR_DIR}/cache"
 APP_LOG_DIR="${APP_VAR_DIR}/log"
 
+### Log results to a rsyslogd server
+# APP_LOG_RSYSLOG=true
+# APP_LOG_HOST="localhost"
+# APP_LOG_PORT=514
+
 ### Command line log level for finger crossed handler
 ### which means: Nothing is logged until a error occured,
 ### if so all log messages for APP_LOG_LEVEL and above

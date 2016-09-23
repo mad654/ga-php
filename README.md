@@ -111,6 +111,61 @@ tail -f var/log/genalgo.debug-*.json | grep GENALGO.DEFAULT.TUTORIAL.DEBUG
 - [PairSelected](src/GenAlgo/Event/PairSelected.php)
 - [PopulationFitnessCalculated](src/GenAlgo/Event/PopulationFitnessCalculated.php)
 
+## results via rsyslog server logging
+
+If you want to compute results in a multi process / multi host environment
+you should enable logging to rsyslog server in order to make sure all things
+logged well.
+
+For now we added support for logging results to rsyslogd.
+
+You can enable `APP_LOG_RSYSLOG=true` in `etc/config` and results
+are send via UDP to the specified rsyslog server.
+See `APP_LOG_HOST` and `APP_LOG_PORT` port to.
+
+### setup rsyslog server
+
+#### allow remote logs reception
+
+#### Debian jessie
+
+Add a new rsyslog config:
+
+```
+cat > /etc/rsyslog.d/20-gen-algo.conf
+```
+
+with the following content
+
+```
+$template json,"%msg%,\n"
+$template GaFile, "/var/log/gen-algo/%$YEAR%/%$MONTH%/%$DAY%/%HOSTNAME%/%$YEAR%%$MONTH%%$DAY%T_%HOSTNAME%.gen-algo.json"
+
+$RuleSet remote
+
+*.* -?GaFile;json
+
+# switch back to the default ruleset:
+$RuleSet RSYSLOG_DefaultRuleset
+
+# Bind the remote messages to the ruleset remote.
+# NOTE: the server must be started after the BindRuleset
+$ModLoad imudp
+$InputUDPServerBindRuleset remote
+$UDPServerRun 514
+
+```
+
+2. Configure logging behavior
+
+- Only log to one file
+- Only log json stuff
+- Rotate daily or by 100 MB
+- max 100 files, min 3 days
+- Add date to filename something like this
+  /var/log/gen-algo/2016/09/23/hostname/20160923T120001_hostname.gen-algo.json
+  for easy rsync to archive
+
 ## ROADMAP
 - [DONE] integrate as command
 - [DONE] add configuration object feature/mad654/configuration
