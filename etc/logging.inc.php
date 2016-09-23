@@ -17,14 +17,25 @@ $logger->useMicrosecondTimestamps(true);
 
 // Development + Production
 $resultLogger = $logger->withName($logger->getName() . '.RESULTS');
-$resultLogger->pushHandler(
-    (new \Monolog\Handler\RotatingFileHandler(
-        "$logDir/$logFileName.result.json",
-        0,
-        \Monolog\Logger::INFO,
-        $bubble = false
-    ))->setFormatter(new \Monolog\Formatter\JsonFormatter())
-);
+if (\GenAlgo\Environment::getLogServerEnabled() == 'true') {
+    $resultLogger->pushHandler(
+        (new \Monolog\Handler\SyslogUdpHandler(
+            \GenAlgo\Environment::getLogServerHostName(),
+            \GenAlgo\Environment::getLogServerPort(),
+            LOG_USER,
+            $bubble = false
+        ))->setFormatter(new \Monolog\Formatter\JsonFormatter())
+    );
+} else {
+    $resultLogger->pushHandler(
+        (new \Monolog\Handler\RotatingFileHandler(
+            "$logDir/$logFileName.result.json",
+            0,
+            \Monolog\Logger::INFO,
+            $bubble = false
+        ))->setFormatter(new \Monolog\Formatter\JsonFormatter())
+    );
+}
 
 $logger->pushHandler(new \Monolog\Handler\FingersCrossedHandler(
     new \Monolog\Handler\RotatingFileHandler(
