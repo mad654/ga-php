@@ -108,6 +108,7 @@ class ComputationResult implements ArrayAble
     public function populationTimedOut(array $lastPopulation, $populationNumber) {
         $this->setTimedOut(
             $lastPopulation,
+            [],
             $populationNumber,
             self::RESULT_TYPE_POPULATION_TIMEOUT
         );
@@ -118,11 +119,13 @@ class ComputationResult implements ArrayAble
     /**
      * @param array $currentPopulation
      * @param $populationNumber
+     * @param array $errorPopulation
      * @return ComputationResult
      */
-    public function selectionTimedOut(array $currentPopulation, $populationNumber) {
+    public function selectionTimedOut(array $currentPopulation, $populationNumber, $errorPopulation = []) {
         $this->setTimedOut(
             $currentPopulation,
+            $errorPopulation,
             $populationNumber,
             self::RESULT_TYPE_SELECTION_TIMEOUT
         );
@@ -150,17 +153,18 @@ class ComputationResult implements ArrayAble
 
     /**
      * @param array $lastPopulation
+     * @param array $errorPopulation
      * @param $populationNumber
      * @param $resultType
      */
-    private function setTimedOut(array $lastPopulation, $populationNumber, $resultType)
+    private function setTimedOut(array $lastPopulation, array $errorPopulation, $populationNumber, $resultType)
     {
         $this->validateStarted();
         $this->validateNotYetStopped();
 
         $this->stop();
         $this->resultType = $resultType;
-        $this->resultData = $lastPopulation;
+        $this->resultData = [$lastPopulation, $errorPopulation];
         $this->lastPopulationNumber = $populationNumber;
     }
 

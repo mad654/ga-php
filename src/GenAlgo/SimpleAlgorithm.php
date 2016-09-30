@@ -103,7 +103,7 @@ class SimpleAlgorithm implements AlgorithmInterface
             } catch (SolutionException $e) {
                 return $result->foundResult($e->getMessage(), [], $counter);
             } catch (SelectionException $e) {
-                return $result->selectionTimedOut($population, $counter);
+                return $result->selectionTimedOut($population, $counter, $e->getErrorPopulation());
             }
 
             $counter++;
