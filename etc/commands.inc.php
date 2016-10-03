@@ -6,6 +6,8 @@
 // you can push a logger to your commands constructor
 /* @var \Monolog\Logger[] $loggers */
 
+require_once 'urandom_php5.inc.php';
+
 return [
     /**
      * <code>$logger->withName()</code>

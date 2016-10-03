@@ -16,6 +16,7 @@ use GenAlgo\Event\PairSelected;
 use GenAlgo\Event\PopulationCreated;
 use GenAlgo\Event\PopulationFitnessCalculated;
 use GenAlgo\Event\SpezSelected;
+use RuntimeException;
 
 
 // todo:mann test 24k with 0.09609375 AND 0.09375 each in one process
@@ -356,9 +357,12 @@ class SimpleAlgorithm implements AlgorithmInterface
     private function selectSpez($population)
     {
         $sum = $this->calcFitnessSum($population);
-        // rand return 0 or 1 so we have to use integer which can
+        // random_int return 0 or 1 so we have to use integer which can
         // represent our full precision
-        $randWeight = rand(0, 1000000000000000) / 1000000000000000;
+        // orig: $randWeight = random_int(0, 1000000000000000) / 1000000000000000;
+        // to support random_int
+        $factor = 1000000000;
+        $randWeight = random_int(0, $factor) / $factor;
 
         foreach ($population as $index => $value) {
             $randWeight -= $value['fitnessRelative'];
@@ -382,7 +386,7 @@ class SimpleAlgorithm implements AlgorithmInterface
         // todo: mann: verify performance if only sometimes multiple childs are returned
 
         // @todo mann: verify performance if mutation only happens during recombination
-        $random = rand(0, 100) / 100;
+        $random = random_int(0, 100) / 100;
         $child1 = '';
         $child2 = '';
 
@@ -414,7 +418,7 @@ class SimpleAlgorithm implements AlgorithmInterface
         $bits = str_split($chromosome);
 
         foreach ($bits as $pos => $bit) {
-            $random = rand(0, 1000000) / 1000000;
+            $random = random_int(0, 1000000) / 1000000;
             if ($random <= $mutationRate) {
                 $bit = ($bit == '1') ? '0' : '1';
                 $bits[$pos] = $bit;

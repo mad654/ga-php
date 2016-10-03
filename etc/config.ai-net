@@ -1,0 +1,39 @@
+# .env config file
+# find details for usage on https://github.com/vlucas/phpdotenv
+
+# App common stuff
+# Disabled because we set it via ENV vars to separate mesurements
+# APP_NAME="GenAlgo"
+
+## Logging
+APP_VAR_DIR="./var/"
+APP_CACHE_DIR="${APP_VAR_DIR}/cache"
+APP_LOG_DIR="../data/ga-logs/log"
+
+### Log results to a rsyslogd server
+APP_LOG_RSYSLOG=true
+APP_LOG_HOST="192.168.20.1"
+APP_LOG_PORT=514
+
+### Command line log level for finger crossed handler
+### which means: Nothing is logged until a error occured,
+### if so all log messages for APP_LOG_LEVEL and above
+### is dump to STDOUT
+APP_LOG_LEVEL="DEBUG"
+
+### Finger crossed handler stores log entries in memory buffer
+### so we have to limit it here, in order to avoid a memory leak
+APP_LOG_BUFFER=10
+
+# Add your application stuff here
+## !!! HAVE SOME REQUIRED ONE, OR WANT TO FILTER VALUES? !!!
+## !!! Take a look at `etc/config_requirements.inc.php`  !!!
+
+TARGET_NUMBER = 42
+TEST_COUNT = 10
+
+# MAX_POPULATIONS=100
+# POPULATION_SIZE=100
+# CROSSOVER_RATE=0.7
+# MUTATION_RATE=0.001
+# MAX_SELECTION_ATTEMPTS=10000

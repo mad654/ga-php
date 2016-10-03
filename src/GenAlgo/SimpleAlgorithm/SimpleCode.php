@@ -15,7 +15,7 @@ class SimpleCode
 
   public function randomGen() {
     $codes = array_keys($this->code);
-    $index = rand( 0, count($this->code) - 1 );
+    $index = random_int( 0, count($this->code) - 1 );
     return $codes[$index];
   }
 
