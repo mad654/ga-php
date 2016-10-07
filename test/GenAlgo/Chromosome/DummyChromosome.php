@@ -18,11 +18,6 @@ class DummyChromosome extends AbstractBitChromosome
         return $this;
     }
 
-    public function mutate()
-    {
-        // TODO: Implement mutate() method.
-    }
-
     public function calculateFitness()
     {
         // TODO: Implement calculateFitness() method.

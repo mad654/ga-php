@@ -59,4 +59,19 @@ abstract class AbstractBitChromosome implements Chromosome
         ];
     }
 
+    public function mutate($rate)
+    {
+        $bits = str_split($this->code);
+
+        foreach ($bits as $pos => $bit) {
+            $random = $this->randomNumberGenerator->get(0, 1000000);
+            $random = $random / 1000000;
+            if ($random <= $rate) {
+                $bit = ($bit == '1') ? '0' : '1';
+                $bits[$pos] = $bit;
+            }
+        }
+
+        return new static(implode('', $bits), $this->randomNumberGenerator);
+    }
 }

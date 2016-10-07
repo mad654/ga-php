@@ -48,6 +48,21 @@ class AbstractBitChromosomeTest extends TestCase
     }
 
     /**
+     * @test
+     */
+    public function shouldMutate() {
+        $this->rand(1000000); $this->assert([0], $this->c('0')->mutate(0.5));
+        $this->rand(500000); $this->assert([1], $this->c('0')->mutate(0.5));
+        $this->rand(600000); $this->assert([0], $this->c('0')->mutate(0.5));
+        $this->rand(100000); $this->assert([1], $this->c('0')->mutate(0.5));
+
+        $this->markTestIncomplete("Doing to problems mocking this random numbers");
+
+        $this->rand([1000000,1000000,1000000]); $this->assert(['000'], $this->c('000')->mutate(0.0));
+        $this->rand([1000000,1000000,1000000]); $this->assert(['001'], $this->c('000')->mutate(0.5));
+    }
+
+    /**
      * @return DummyChromosome
      */
     private function c($code)
@@ -64,6 +79,10 @@ class AbstractBitChromosomeTest extends TestCase
     {
         $expected = [];
 
+        if (!is_array($actual)) {
+            $actual = [ $actual ];
+        }
+
         foreach ($expectedCodes as $code) {
             $expected[] = $this->c($code);
         }
@@ -71,10 +90,10 @@ class AbstractBitChromosomeTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    private function rand($int)
+    private function rand($number)
     {
         $this->randomNumberGenerator = $this->createMock(RandomNumberGenerator::class);
-        $this->randomNumberGenerator->method('get')->willReturn($int);
+        $this->randomNumberGenerator->method('get')->willReturn($number);
     }
 
 }
