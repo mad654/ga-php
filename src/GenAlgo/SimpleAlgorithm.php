@@ -2,10 +2,12 @@
 
 namespace GenAlgo;
 
+use Common\RandomNumberGenerator;
 use GenAlgo\AlgorithmTestRunner\EventListenerInterface;
 use GenAlgo\ComputationData\ComputationRequest;
 use GenAlgo\ComputationData\ComputationResult;
 
+use GenAlgo\SimpleAlgorithm\SimpleAlgorithmChromosome;
 use GenAlgo\SimpleAlgorithm\SolutionException;
 use GenAlgo\SimpleAlgorithm\SimpleCode;
 use GenAlgo\ConfigurationValues;
@@ -22,22 +24,6 @@ use RuntimeException;
 // todo:mann test 24k with 0.09609375 AND 0.09375 each in one process
 class SimpleAlgorithm implements AlgorithmInterface
 {
-    const CODE = [
-        '0000' => '0',
-        '0001' => '1',
-        '0010' => '2',
-        '0011' => '3',
-        '0100' => '4',
-        '0101' => '5',
-        '0110' => '6',
-        '0111' => '7',
-        '1000' => '8',
-        '1001' => '9',
-        '1010' => '+',
-        '1011' => '-',
-        '1100' => '*',
-        '1101' => '/',
-    ];
     const CHROMOSOME_LENGTH = 9;
 
     private $eventListener;
@@ -92,7 +78,7 @@ class SimpleAlgorithm implements AlgorithmInterface
         // todo: mann: store intial population of long running
         // todo: mann: test optimal parameters
         // todo: mann: are optimal parameters generic or problem related?
-        $code = new SimpleCode(self::CODE);
+        $code = new SimpleCode(SimpleAlgorithmChromosome::CODE);
         $population = $this->initPopulation($code, $c->populationSize, self::CHROMOSOME_LENGTH);
         $this->notify(new PopulationCreated(1, $population), 'handlePopulationCreated');
 
@@ -100,7 +86,7 @@ class SimpleAlgorithm implements AlgorithmInterface
 
         while (true) {
             try {
-                $new = $this->generateNewPopulation($population, $code, $c, $searchedValue);
+                $new = $this->generateNewPopulation($population, $c, $searchedValue);
             } catch (SolutionException $e) {
                 return $result->foundResult($e->getMessage(), [], $counter);
             } catch (SelectionException $e) {
@@ -153,19 +139,17 @@ class SimpleAlgorithm implements AlgorithmInterface
 
     /**
      * @param array $population
-     * @param SimpleCode $code
      * @param ConfigurationValues $c
      * @param $searched
      * @return array
      */
     private function generateNewPopulation(
         array $population,
-        SimpleCode $code,
         ConfigurationValues $c,
         $searched
     ) {
         $newPopulation = [];
-        $fitness = $this->testPoputlation($population, $code, $searched);
+        $fitness = $this->testPoputlation($population, $searched);
         $populationFitness = $this->calcFitnessSum($fitness) / count($population);
         $this->notify(
             new PopulationFitnessCalculated($populationFitness, $population),
@@ -194,17 +178,18 @@ class SimpleAlgorithm implements AlgorithmInterface
 
     /**
      * @param array $population
-     * @param SimpleCode $code
      * @param $searched
      * @return array
      */
-    private function testPoputlation(array $population, SimpleCode $code, $searched)
+    private function testPoputlation(array $population, $searched)
     {
         $fitnessAbsolute = [];
 
         foreach ($population as $spez) {
-            $decoded = $code->decode($spez);
-            $fitness = $this->calculateFittness($searched, $decoded);
+            $c = new SimpleAlgorithmChromosome($spez, new RandomNumberGenerator());
+            $c->setSearched($searched);
+
+            $fitness = $c->calculateFitness();
 
             $fitnessAbsolute[] = [
                 'chromosome' => $spez,
@@ -223,68 +208,6 @@ class SimpleAlgorithm implements AlgorithmInterface
         });
 
         return $fitnessRelative;
-    }
-
-    /**
-     * @param $searched
-     * @param $decoded
-     * @return float
-     * @throws SolutionException
-     */
-    private function calculateFittness($searched, $decoded)
-    {
-        $valid = $this->cleanUp($decoded);
-        # echo "$valid ";
-
-        $result = eval("return $valid;");
-        # echo "= $result >> ";
-
-        $difference = $searched - $result;
-        if ($difference == 0) {
-            throw new SolutionException($valid);
-        }
-
-        return 1 / ($difference);
-    }
-
-    /**
-     * @param $code
-     * @return mixed|string
-     */
-    private function cleanUp($code)
-    {
-        $numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-        $signs = ['+', '-', '*', '/'];
-        $needsSign = false;
-        $result = [];
-
-        foreach (str_split($code) as $diggest) {
-            if ($needsSign === false && in_array($diggest, $numbers)) {
-                $result[] = $diggest;
-                $needsSign = true;
-            }
-
-            if ($needsSign && in_array($diggest, $signs)) {
-                $result[] = $diggest;
-                $needsSign = false;
-            }
-        }
-
-        // make sure last diggest is a number
-        $last = array_pop($result);
-        if (in_array($last, $numbers)) {
-            $result[] = $last;
-        }
-
-        // avoid division by zero errors
-        $returnValue = implode('', $result);
-        $returnValue = str_replace('/0', '', $returnValue);
-
-        if (empty($returnValue)) {
-            return '0';
-        }
-
-        return $returnValue;
     }
 
     /**
@@ -382,50 +305,26 @@ class SimpleAlgorithm implements AlgorithmInterface
      */
     private function sex($spez1, $spez2, ConfigurationValues $c)
     {
-        // todo: mann: verify performance if only one child is returned
-        // todo: mann: verify performance if only sometimes multiple childs are returned
-
-        // @todo mann: verify performance if mutation only happens during recombination
         $random = random_int(0, 100) / 100;
-        $child1 = '';
-        $child2 = '';
+        $child1 = null;
+        $child2 = null;
 
         // recombination
         if ($random <= $c->crossoverRate) {
-            // @todo mann: verify performance if recombinationPoint got new random number
-            $length = array_sum(count_chars($spez1));
-            $recombinationPoint = intval($length * $random);
-            $child1 = substr($spez1, 0, $recombinationPoint) . substr($spez2, $recombinationPoint,
-                    $length);
-            $child2 = substr($spez2, 0, $recombinationPoint) . substr($spez1, $recombinationPoint,
-                    $length);
+            $c1 = new SimpleAlgorithmChromosome($spez1, new RandomNumberGenerator());
+            $c2 = new SimpleAlgorithmChromosome($spez2, new RandomNumberGenerator());
+            list ($child1, $child2) = $c1->crossover($c2);
         }
 
-        // mutation: without we find the result in the first generation or nevert (local maximum???)
-        $child1 = $this->mutate($child1, $c->mutationRate);
-        $child2 = $this->mutate($child2, $c->mutationRate);
-
-        return [$child1, $child2];
-    }
-
-    /**
-     * @param $chromosome
-     * @param $mutationRate
-     * @return string
-     */
-    private function mutate($chromosome, $mutationRate)
-    {
-        $bits = str_split($chromosome);
-
-        foreach ($bits as $pos => $bit) {
-            $random = random_int(0, 1000000) / 1000000;
-            if ($random <= $mutationRate) {
-                $bit = ($bit == '1') ? '0' : '1';
-                $bits[$pos] = $bit;
-            }
+        if (!is_null($child1)) {
+            $child1 = $child1->mutate($c->mutationRate);
         }
 
-        return implode('', $bits);
+        if (!is_null($child2)) {
+            $child2 = $child2->mutate($c->mutationRate);
+        }
+
+        return [(string) $child1, (string) $child2];
     }
 }
 

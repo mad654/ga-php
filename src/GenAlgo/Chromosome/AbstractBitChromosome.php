@@ -74,4 +74,9 @@ abstract class AbstractBitChromosome implements Chromosome
 
         return new static(implode('', $bits), $this->randomNumberGenerator);
     }
+
+    public function __toString()
+    {
+        return $this->code;
+    }
 }
